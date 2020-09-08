@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  is_friendly: false
+  name: MyString
+  type_id: 1
+  health: 1
+  attack: 1
+  defense: 1
+  weapon_id: 1
+
+two:
+  is_friendly: false
+  name: MyString
+  type_id: 1
+  health: 1
+  attack: 1
+  defense: 1
+  weapon_id: 1

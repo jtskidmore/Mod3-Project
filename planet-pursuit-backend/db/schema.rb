@@ -10,7 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_04_212755) do
+ActiveRecord::Schema.define(version: 2020_09_08_162226) do
+
+  create_table "npcs", force: :cascade do |t|
+    t.boolean "is_friendly"
+    t.string "name"
+    t.integer "type_id"
+    t.integer "health"
+    t.integer "attack"
+    t.integer "defense"
+    t.integer "weapon_id"
+    t.integer "potion_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "planets", force: :cascade do |t|
+    t.string "name"
+    t.string "environment"
+    t.integer "point_value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "player_planets", force: :cascade do |t|
+    t.integer "player_id"
+    t.integer "npc_id"
+    t.integer "planet_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "players", force: :cascade do |t|
     t.string "name"

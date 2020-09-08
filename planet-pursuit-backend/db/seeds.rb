@@ -32,3 +32,9 @@ minor_healing = Potion.create(name: "minor healing", health_points: 20)
 major_healing = Potion.create(name: "major healing", health_points: 40)
 
 luke = Player.create(name: "Luke", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
+
+tatooine = Planet.create(name:"tatooine", environment:"desert", point_value:200)
+
+jeff = Npc.create(name:"Jeff", health:100, attack:0, defense:0, is_friendly:true, weapon_id:2, potion_id:1, type_id:1)
+
+pp1 = PlayerPlanet.create(player_id:1, npc_id:1, planet_id:1)

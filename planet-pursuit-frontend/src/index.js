@@ -4,12 +4,19 @@ const PLAYERS_URL = "http://localhost:3000/players"
 const TYPES_URL = "http://localhost:3000/types"
 const WEAPONS_URL = "http://localhost:3000/weapons"
 const POTIONS_URL = "http://localhost:3000/potions"
-const main = document.getElementById("test")
+const PLANETS_URL = "http://localhost:3000/planets"
+const NPCS_URL = "http://localhost:3000/npcs"
+const PLAYERPLANETS_URL = "http://localhost:3000/player_planets"
+const home = document.getElementById("home")
 
 let _types
 let _players
 let _weapons
 let _potions
+let _planets
+let _npcs
+let _player_planets
+let _current_player
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -17,9 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const playersPromise = fetch(PLAYERS_URL).then(res => res.json())
   const weaponsPromise = fetch(WEAPONS_URL).then(res => res.json())
   const potionsPromise = fetch(POTIONS_URL).then(res => res.json())
+  const planetsPromise = fetch(PLANETS_URL).then(res => res.json())
+  const npcsPromise = fetch(NPCS_URL).then(res => res.json())
 
-  Promise.all([typesPromise, playersPromise, weaponsPromise, potionsPromise]).then(data => {
-    [_types, _players, _weapons, _potions] = data;
+  Promise.all([typesPromise, playersPromise, weaponsPromise, potionsPromise, planetsPromise, npcsPromise]).then(data => {
+    [_types, _players, _weapons, _potions, _planets, _npcs] = data;
 
     renderTypes(_types);
     renderPlayers(_players);
@@ -50,24 +59,51 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           _players.push(data)
           renderPlayer(data)
+          console.log(data)
+          _current_player = data
         })
+
+      let visitBtn = document.createElement('button')
+      visitBtn.textContent = "Visit Planet"
+      visitBtn.id = "visit-btn"
+      home.append(visitBtn)
+
+      visitBtn.addEventListener("click", () => renderPlanet(_current_player))
+
     })
   })
+}) //end dom content loaded
 
+function renderPlanet(player) {
+  console.log(player)
+  home.style.display = "none"
+  let playerId = player.id
+  let planetId = _planets[0].id
+  let npcId = _npcs[0].id
 
+  let data = {
+    player_id: playerId,
+    planet_id: planetId,
+    npc_id: npcId
+  }
 
+  let configObj = {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }
 
-  //DONE//render new player form
-  //DONE//dropdown for types
-  //DONE//input for name
-  //DONE//add event listener to form (prevent submit default)
-
-  //DONE//create new player in backend
-  //DONE//set default hp, attack, and defense
-
-  //
-
-})
+  fetch(PLAYERPLANETS_URL, configObj)
+    .then(res => res.json())
+    .then((data) => {
+      // _players.push(data)
+      // renderPlayer(data)
+      console.log(data)
+    })
+}
 
 
 function createForm(data) {
@@ -93,13 +129,13 @@ function createForm(data) {
   })
 
   let newButton = document.createElement('button')
-  newButton.innerText = "Create Monster!"
+  newButton.innerText = "Create Player!"
 
   form.append(nameIn, typeSelect, newButton)
 
   formDiv.append(form)
 
-  main.append(formDiv)
+  home.append(formDiv)
 
 }
 
@@ -111,8 +147,8 @@ function renderPlayers(data) {
 }
 
 function renderPlayer(player) {
-  
-  let test = document.getElementById('test')
+
+  let home = document.getElementById('home')
   let playerName = document.createElement("h1")
   playerName.textContent = player.name
 
@@ -129,15 +165,15 @@ function renderPlayer(player) {
   playerAttack.textContent = player.attack
 
   let playerWeapon = document.createElement("h5")
-  let weapon =  _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
+  let weapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
   playerWeapon.textContent = weapon.name
   // playerWeapon.textContent =
 
   let playerPotion = document.createElement("h5")
-  let potion =  _potions.filter((potion) => potion.id === player.potion_id)[0]
+  let potion = _potions.filter((potion) => potion.id === player.potion_id)[0]
   playerPotion.textContent = potion.name
 
-  test.append(playerName, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
+  home.append(playerName, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
 }
 
 
@@ -146,3 +182,5 @@ function renderTypes(data) {
   console.log(data)
   console.log(_weapons)
 }
+
+

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :player_planets
+  resources :planets
+  resources :npcs
   resources :potions
   resources :weapons
   resources :types
