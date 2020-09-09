@@ -102,15 +102,22 @@ function renderPlayerPlanet(playerplanet) {
         npcStatList.append(npcHealth, npcWeapon)
         npcStats.append(npcStatList)
 
+        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+
         //option buttons
-        let takePotion = document.createElement('button')
-        takePotion.id = 'take-potion'
-        takePotion.textContent = 'Take Potion'
+        if (player.potion_id != 3) {
+          let takePotion = document.createElement('button')
+          takePotion.id = 'take-potion'
+          takePotion.textContent = 'Take Potion'
+          game.append(takePotion)
+        }
+
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
         attackBtn.textContent = 'Attack'
 
-        game.append(planetPlanet, planetNpc, playerStats, npcStats, takePotion, attackBtn)
+        game.append(attackBtn)
+
         createFightListeners()
 
     }
@@ -126,10 +133,8 @@ function createTradeListeners() {
 }
 
 function acceptTrade() {
-    console.log(`${PLAYERS_URL}/${_current_player.id}`)
     let npc = _npcs.filter((npc) => npc.id === _currentPlanet.npc_id)[0]
     let npcWeapon = npc.weapon_id
-    console.log(npcWeapon)
     let player = {
         // id: _current_player.id,
         weapon_id: npcWeapon
@@ -143,13 +148,15 @@ function acceptTrade() {
         body: JSON.stringify(player)
     }).then(res => res.json())
         .then((player) => {
-            console.log(player)
             _currentWeapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
         })
+    alert(`Your weapon is now a ${_currentWeapon.name}!`)
+    alert('Traveling to new planet...')
+    renderPlanet(_current_player)
 }
 
 function denyTrade() {
-    console.log("deny trade working")
+    alert("Traveling to new planet...")
     renderPlanet(_current_player)
 }
 
@@ -167,13 +174,14 @@ function consumePotion() {
     let newHealth = _currentHealth + _currentPotion.health_points
     console.log(newHealth)
     document.getElementById('take-potion').style.display = 'none'
-    document.getElementById('player-potion').style.display = 'none'
+    document.getElementById('player-potion').textContent = `Potion: none`
     alert("Your health has been increased!")
     document.getElementById('player-health').textContent = `Health: ${newHealth}`
 
     let player = {
         // id: _current_player.id,
-        health: newHealth
+        health: newHealth,
+        potion_id: 3
     }
     fetch(`${PLAYERS_URL}/${_current_player.id}`, {
         method: "PATCH",
@@ -184,7 +192,7 @@ function consumePotion() {
         body: JSON.stringify(player)
     }).then(res => res.json())
         .then((player) => {
-            console.log(player)
+            _currentPotion = _potions.filter((potion) => potion.id === player.potion_id)[0]
         })
 
 }
