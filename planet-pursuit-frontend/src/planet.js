@@ -39,7 +39,8 @@ function renderPlanet(player) {
 function renderPlayerPlanet(playerplanet) {
     // console.log(playerplanet)
     let planetPlayer = document.createElement("h5")
-    let player = _players.filter((player) => player.id === playerplanet.player_id)[0]
+    // let player = _players.filter((player) => player.id === playerplanet.player_id)[0]
+    let player = _current_player
     planetPlayer.textContent = player.name
 
     let planetPlanet = document.createElement("h5")
