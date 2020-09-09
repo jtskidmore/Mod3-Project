@@ -13,15 +13,14 @@ class PlayersController < ApplicationController
   def create
     allWeapons = Weapon.all
     allPotions = Potion.where.not(id: 3)
-    puts params
 
     render :json =>
     Player.create(
       name: params[:name],
       type_id: params[:type_id],
-      health: 100,
+      health: 0,
       defense: 50,
-      attack: 75,
+      attack: 0,
       score: 0,
       weapon_id: allWeapons.sample.id,
       potion_id: allPotions.sample.id
@@ -29,7 +28,7 @@ class PlayersController < ApplicationController
   end
 
   def update
-    puts params
+    puts player_params
     player = Player.find(params[:id])
     player.update(player_params)
     # byebug
@@ -39,7 +38,7 @@ class PlayersController < ApplicationController
   private
 
   def player_params
-    params.require(:player).permit(:weapon_id, :health, :potion_id, :score)
+    params.require(:player).permit(:weapon_id, :health, :potion_id, :score, :type_id, :attack, :name)
   end
 
 end

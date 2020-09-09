@@ -79,10 +79,9 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(PLAYERS_URL, configObj)
         .then(res => res.json())
         .then((data) => {
-          _players.push(data)
-          renderPlayer(data)
-          console.log(data)
+          // _players.push(data)
           _current_player = data
+          renderPlayer(data)
         })
 
       form.reset()
@@ -125,6 +124,48 @@ function createForm(data) {
 
 }
 
+function setPlayerAttributes() {
+  if (_current_player.type_id === 1) {
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 1)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 100
+    console.log(_currentWeapon)
+  } else if (_current_player.type_id === 2) {
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 2)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 150
+  } else if (_current_player.type_id === 3) {
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 3)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 125
+  }
+
+  let data = {
+    weapon_id: _currentWeapon.id,
+    attack: _playerAttack,
+    health: _currentHealth
+  }
+
+  let configObj = {
+    method: "PATCH",
+    headers: {
+      "Accept": "application/json",
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }
+
+  fetch(`${PLAYERS_URL}/${_current_player.id}`, configObj)
+    .then(res => res.json())
+    .then((data) => {
+      _players.push(data)
+      _current_player = data
+    })
+
+    console.log(_current_player)
+
+}
+
 function renderLeaderboard() {
   leaderboard.innerHTML = ""
   leaderboard.innerHTML = "<h3>Leaderboard</h3>"
@@ -141,6 +182,8 @@ function renderLeaderboard() {
 
 function renderPlayer(player) {
 
+  setPlayerAttributes()
+
   let home = document.getElementById('home')
   let playerName = document.createElement("h1")
   playerName.textContent = player.name
@@ -149,8 +192,7 @@ function renderPlayer(player) {
   playerType.textContent = player.type
 
   let playerHealth = document.createElement("h2")
-  playerHealth.textContent = player.health
-  _currentHealth = player.health
+  playerHealth.textContent = _currentHealth
 
   let playerScore = document.createElement("h2")
   playerScore.textContent = player.score
@@ -161,13 +203,12 @@ function renderPlayer(player) {
   _playerDefense = player.defense
 
   let playerAttack = document.createElement("h4")
-  playerAttack.textContent = player.attack
-  _playerAttack = player.attack
+  playerAttack.textContent = _playerAttack
 
   let playerWeapon = document.createElement("h5")
-  let weapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
-  _currentWeapon = weapon
-  playerWeapon.textContent = weapon.name
+  // let weapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
+  // _currentWeapon = weapon
+  playerWeapon.textContent = _currentWeapon.name
   // playerWeapon.textContent =
 
   let playerPotion = document.createElement("h5")
