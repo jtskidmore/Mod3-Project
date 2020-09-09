@@ -8,6 +8,7 @@ const PLANETS_URL = "http://localhost:3000/planets"
 const NPCS_URL = "http://localhost:3000/npcs"
 const PLAYERPLANETS_URL = "http://localhost:3000/player_planets"
 const home = document.getElementById("home")
+const game = document.getElementById("game")
 
 let _types
 let _players
@@ -15,8 +16,19 @@ let _weapons
 let _potions
 let _planets
 let _npcs
-let _player_planets
+let _player_planets = []
 let _current_player
+let _currentWeapon
+let _currentPotion
+let _currentHealth
+let _playerAttack
+let _playerDefense
+let _currentNpc
+let _npcHealth
+let _npcAttack
+let _npcDefense
+let _npcWeapon
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -74,36 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
   })
 }) //end dom content loaded
 
-function renderPlanet(player) {
-  console.log(player)
-  home.style.display = "none"
-  let playerId = player.id
-  let planetId = _planets[0].id
-  let npcId = _npcs[0].id
-
-  let data = {
-    player_id: playerId,
-    planet_id: planetId,
-    npc_id: npcId
-  }
-
-  let configObj = {
-    method: "POST",
-    headers: {
-      "Accept": "application/json",
-      "content-type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }
-
-  fetch(PLAYERPLANETS_URL, configObj)
-    .then(res => res.json())
-    .then((data) => {
-      // _players.push(data)
-      // renderPlayer(data)
-      console.log(data)
-    })
-}
 
 
 function createForm(data) {
@@ -157,20 +139,25 @@ function renderPlayer(player) {
 
   let playerHealth = document.createElement("h2")
   playerHealth.textContent = player.health
+  _currentHealth = player.health
 
   let playerDefense = document.createElement("h3")
   playerDefense.textContent = player.defense
+  _playerDefense = player.defense
 
   let playerAttack = document.createElement("h4")
   playerAttack.textContent = player.attack
+  _playerAttack = player.attack
 
   let playerWeapon = document.createElement("h5")
   let weapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
+  _currentWeapon = weapon
   playerWeapon.textContent = weapon.name
   // playerWeapon.textContent =
 
   let playerPotion = document.createElement("h5")
   let potion = _potions.filter((potion) => potion.id === player.potion_id)[0]
+  _currentPotion = potion
   playerPotion.textContent = potion.name
 
   home.append(playerName, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)

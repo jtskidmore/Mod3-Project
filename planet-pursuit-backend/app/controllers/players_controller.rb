@@ -13,6 +13,7 @@ class PlayersController < ApplicationController
   def create
     allWeapons = Weapon.all
     allPotions = Potion.all
+    puts params
 
     render :json =>
     Player.create(
@@ -25,6 +26,20 @@ class PlayersController < ApplicationController
       weapon_id: allWeapons.sample.id,
       potion_id: allPotions.sample.id
     )
+  end
+
+  def update
+    puts params
+    player = Player.find(params[:id])
+    player.update(player_params)
+    # byebug
+    render :json => player
+  end
+
+  private
+
+  def player_params
+    params.require(:player).permit(:weapon_id, :health)
   end
 
 end

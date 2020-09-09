@@ -33,8 +33,16 @@ major_healing = Potion.create(name: "major healing", health_points: 40)
 
 luke = Player.create(name: "Luke", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
 
-tatooine = Planet.create(name:"tatooine", environment:"desert", point_value:200)
+tatooine = Planet.create(name:"Tatooine", environment:"desert", point_value:200)
+naboo = Planet.create(name:"Naboo", environment:"forest", point_value:200)
+kash = Planet.create(name:"Kashyyyk", environment:"desert", point_value:200)
+alderaan = Planet.create(name:"Alderaan", environment:"desert", point_value:200)
+coruscant = Planet.create(name:"Coruscant", environment:"ocean", point_value:200)
 
 jeff = Npc.create(name:"Jeff", health:100, attack:0, defense:0, is_friendly:true, weapon_id:2, potion_id:1, type_id:1)
+boba = Npc.create(name:"Boba Fett", health:100, attack:30, defense:30, is_friendly:false, weapon_id:2, potion_id:1, type_id:1)
+jabba = Npc.create(name:"Jabba the Hutt", health:100, attack:40, defense:40, is_friendly:false, weapon_id:4, potion_id:1, type_id:1)
+lando = Npc.create(name:"Lando Calrissian", health:100, attack:0, defense:0, is_friendly:true, weapon_id:3, potion_id:1, type_id:1)
 
 pp1 = PlayerPlanet.create(player_id:1, npc_id:1, planet_id:1)
+
