@@ -12,7 +12,7 @@ class PlayersController < ApplicationController
 
   def create
     allWeapons = Weapon.all
-    allPotions = [Potion.first, Potion.second]
+    allPotions = Potion.where.not(id: 3)
     puts params
 
     render :json =>
