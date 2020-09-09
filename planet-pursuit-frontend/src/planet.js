@@ -150,7 +150,7 @@ function acceptTrade() {
         .then((player) => {
             _currentWeapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
         })
-    alert(`Your weapon is now a ${_currentWeapon.name}!`)
+    alert(`Your weapon is now a ${_weapons.filter((weapon) => weapon.id === npc.weapon_id)[0].name}!`)
     alert('Traveling to new planet...')
     renderPlanet(_current_player)
 }
