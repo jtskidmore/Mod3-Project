@@ -7,8 +7,16 @@ const POTIONS_URL = "http://localhost:3000/potions"
 const PLANETS_URL = "http://localhost:3000/planets"
 const NPCS_URL = "http://localhost:3000/npcs"
 const PLAYERPLANETS_URL = "http://localhost:3000/player_planets"
+
 const home = document.getElementById("home")
 const game = document.getElementById("game")
+
+const form = document.createElement('form')
+form.id = "player-form"
+
+const visitBtn = document.createElement('button')
+visitBtn.textContent = "Visit Planet"
+visitBtn.id = "visit-btn"
 
 let _types
 let _players
@@ -17,10 +25,12 @@ let _potions
 let _planets
 let _npcs
 let _player_planets = []
+let _currentPlanet
 let _current_player
 let _currentWeapon
 let _currentPotion
 let _currentHealth
+let _currentScore
 let _playerAttack
 let _playerDefense
 let _currentNpc
@@ -42,11 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
   Promise.all([typesPromise, playersPromise, weaponsPromise, potionsPromise, planetsPromise, npcsPromise]).then(data => {
     [_types, _players, _weapons, _potions, _planets, _npcs] = data;
 
-    renderTypes(_types);
-    renderPlayers(_players);
     createForm(_types);
 
-    const form = document.getElementById("player-form")
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       let playerName = e.target["name"].value
@@ -75,13 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
           _current_player = data
         })
 
-      let visitBtn = document.createElement('button')
-      visitBtn.textContent = "Visit Planet"
-      visitBtn.id = "visit-btn"
-      home.append(visitBtn)
-
-      visitBtn.addEventListener("click", () => renderPlanet(_current_player))
-
+      form.reset()
     })
   })
 }) //end dom content loaded
@@ -92,9 +93,6 @@ function createForm(data) {
 
   console.log(data)
   let formDiv = document.createElement('div')
-
-  let form = document.createElement('form')
-  form.id = "player-form"
 
   let nameIn = document.createElement('input')
   nameIn.id = "name"
@@ -121,13 +119,6 @@ function createForm(data) {
 
 }
 
-
-function renderPlayers(data) {
-
-  data.forEach(player => renderPlayer(player))
-
-}
-
 function renderPlayer(player) {
 
   let home = document.getElementById('home')
@@ -140,6 +131,10 @@ function renderPlayer(player) {
   let playerHealth = document.createElement("h2")
   playerHealth.textContent = player.health
   _currentHealth = player.health
+
+  let playerScore = document.createElement("h2")
+  playerScore.textContent = player.score
+  _currentScore = player.score
 
   let playerDefense = document.createElement("h3")
   playerDefense.textContent = player.defense
@@ -160,14 +155,7 @@ function renderPlayer(player) {
   _currentPotion = potion
   playerPotion.textContent = potion.name
 
-  home.append(playerName, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
+  home.append(playerName, playerScore, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
+  home.append(visitBtn)
+  visitBtn.addEventListener("click", () => renderPlanet(_current_player))
 }
-
-
-
-function renderTypes(data) {
-  console.log(data)
-  console.log(_weapons)
-}
-
-

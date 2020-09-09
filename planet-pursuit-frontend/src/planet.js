@@ -1,4 +1,4 @@
-let _currentPlanet
+
 
 
 
@@ -72,33 +72,45 @@ function renderPlayerPlanet(playerplanet) {
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
         let statList = document.createElement('ul')
+
+        let playerScore = document.createElement('li')
+        playerScore.textContent = `Score: ${player.score}`
+        playerScore.id = 'player-score'
+
         let playerHealth = document.createElement('li')
         playerHealth.textContent = `Health: ${player.health}`
-        console.log(player)
-        console.log(_current_player)
         playerHealth.id = 'player-health'
+
         let playerAttack = document.createElement('li')
         playerAttack.textContent = `Attack: ${player.attack}`
+
         let playerDefense = document.createElement('li')
         playerDefense.textContent = `Defense: ${player.defense}`
+
         let playerWeapon = document.createElement('li')
         playerWeapon.textContent = `Weapon: ${_currentWeapon.name}`
+
         let playerPotion = document.createElement('li')
         playerPotion.textContent = `Potion: ${_currentPotion.name}`
         playerPotion.id = 'player-potion'
-        statList.append(playerHealth, playerAttack, playerDefense, playerWeapon, playerPotion)
+
+        statList.append(playerScore, playerHealth, playerAttack, playerDefense, playerWeapon, playerPotion)
         playerStats.append(statList)
 
         //npc stat list
         let npcStats = document.createElement('div')
         npcStats.id = 'npc-stats'
+
         let npcStatList = document.createElement('ul')
+
         let npcHealth = document.createElement('li')
         npcHealth.textContent = `Health: ${npc.health}`
         npcHealth.id = 'npc-health'
+
         let npcWeapon = document.createElement('li')
         let npcWeaponEquipped = _weapons.filter((weapon) => weapon.id === npc.weapon_id)[0]
         npcWeapon.textContent = `Weapon: ${npcWeaponEquipped.name}`
+
         npcStatList.append(npcHealth, npcWeapon)
         npcStats.append(npcStatList)
 
@@ -204,10 +216,13 @@ function attack() {
     _npcHealth = _npcHealth - _playerAttack
     alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}`)
     if (_npcHealth <= 0) {
+
+      //var = player score plus planet score
+
         alert(`You have defeated ${_currentNpc.name}!!!`)
         let player = {
-            // id: _current_player.id,
             health: _currentHealth
+            // score: //var
         }
         let healthPromise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
             method: "PATCH",
@@ -239,6 +254,9 @@ function enemyAttack() {
     if (_currentHealth <= 0) {
         alert(`${_currentNpc.name} has defeated you!`)
         alert(`Returning to base...`)
+
+        //grab player score and add it to leaderboard
+
         game.style.display = 'none'
         home.style.display = 'block'
     } else {
