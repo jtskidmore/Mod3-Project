@@ -106,10 +106,10 @@ function renderPlayerPlanet(playerplanet) {
 
         //option buttons
         if (player.potion_id != 3) {
-          let takePotion = document.createElement('button')
-          takePotion.id = 'take-potion'
-          takePotion.textContent = 'Take Potion'
-          game.append(takePotion)
+            let takePotion = document.createElement('button')
+            takePotion.id = 'take-potion'
+            takePotion.textContent = 'Take Potion'
+            game.append(takePotion)
         }
 
         let attackBtn = document.createElement('button')
@@ -161,8 +161,11 @@ function denyTrade() {
 }
 
 function createFightListeners() {
-    let takeFightPotion = document.getElementById('take-potion')
-    takeFightPotion.addEventListener('click', () => consumePotion())
+    if (_current_player.potion_id != 3) {
+        let takeFightPotion = document.getElementById('take-potion')
+        takeFightPotion.addEventListener('click', () => consumePotion())
+    }
+
     let attackFightBtn = document.getElementById('attack-btn')
     attackFightBtn.addEventListener('click', () => attack())
 

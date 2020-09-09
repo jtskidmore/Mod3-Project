@@ -12,7 +12,7 @@ class PlayersController < ApplicationController
 
   def create
     allWeapons = Weapon.all
-    allPotions = Potion.all
+    allPotions = [Potion.first, Potion.second]
     puts params
 
     render :json =>
