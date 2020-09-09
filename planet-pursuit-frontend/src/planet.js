@@ -254,9 +254,10 @@ function enemyAttack() {
     alert(`${_currentNpc.name} is preparing their attack...`)
     alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!!!`)
     if (_currentHealth <= 0) {
+        _players.push(_current_player)
         alert(`${_currentNpc.name} has defeated you!`)
         alert(`Returning to base...`)
-
+        renderLeaderboard()
         //grab player score and add it to leaderboard
 
         game.style.display = 'none'

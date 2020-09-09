@@ -18,6 +18,9 @@ const visitBtn = document.createElement('button')
 visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
 
+const leaderboard = document.createElement('ol')
+leaderboard.id = "leaderboard"
+
 let _types
 let _players
 let _weapons
@@ -115,8 +118,25 @@ function createForm(data) {
 
   formDiv.append(form)
 
+  renderLeaderboard()
+
+  home.append(leaderboard)
   home.append(formDiv)
 
+}
+
+function renderLeaderboard() {
+  leaderboard.innerHTML = ""
+  leaderboard.innerHTML = "<h3>Leaderboard</h3>"
+  let sortedPlayers = _players.sort(function(a, b){return a.score-b.score})
+  let top5Players = sortedPlayers.slice(Math.max(sortedPlayers.length - 5, 1))
+  top5Players.reverse()
+  console.log(top5Players)
+  top5Players.forEach(player => {
+    let li = document.createElement('li')
+    li.textContent = `${player.name} Score: ${player.score}`
+    leaderboard.append(li)
+  })
 }
 
 function renderPlayer(player) {
