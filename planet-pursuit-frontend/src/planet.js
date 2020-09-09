@@ -216,12 +216,14 @@ function attack() {
     _npcHealth = _npcHealth - _playerAttack
     alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}`)
     if (_npcHealth <= 0) {
-
       //var = player score plus planet score
+      let planetPointValue = _planets.filter((planet) => planet.id === _currentPlanet.planet_id)[0].point_value
+      _currentScore = _currentScore + planetPointValue
 
         alert(`You have defeated ${_currentNpc.name}!!!`)
         let player = {
-            health: _currentHealth
+            health: _currentHealth,
+            score: _currentScore
             // score: //var
         }
         let healthPromise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {

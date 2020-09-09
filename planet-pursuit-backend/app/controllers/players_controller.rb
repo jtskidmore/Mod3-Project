@@ -39,7 +39,7 @@ class PlayersController < ApplicationController
   private
 
   def player_params
-    params.require(:player).permit(:weapon_id, :health, :potion_id)
+    params.require(:player).permit(:weapon_id, :health, :potion_id, :score)
   end
 
 end
