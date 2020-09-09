@@ -10,6 +10,7 @@ const PLAYERPLANETS_URL = "http://localhost:3000/player_planets"
 
 const home = document.getElementById("home")
 const game = document.getElementById("game")
+const div = document.getElementById('previous-game-stats')
 
 const form = document.createElement('form')
 form.id = "player-form"
@@ -18,8 +19,8 @@ const visitBtn = document.createElement('button')
 visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
 
-const leaderboard = document.createElement('ol')
-leaderboard.id = "leaderboard"
+const leaderboard = document.getElementById("leaderboard")
+
 
 let _types
 let _players
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     [_types, _players, _weapons, _potions, _planets, _npcs] = data;
 
     createForm(_types);
+    renderPreviousGameStats(_players);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -80,11 +82,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(res => res.json())
         .then((data) => {
           // _players.push(data)
+          console.log(data)
           _current_player = data
           renderPlayer(data)
         })
 
       form.reset()
+      console.log(_current_player)
     })
   })
 }) //end dom content loaded
@@ -119,9 +123,20 @@ function createForm(data) {
 
   renderLeaderboard()
 
-  home.append(leaderboard)
   home.append(formDiv)
 
+}
+
+function renderPreviousGameStats (_players) {
+  let lastPlayer = _players.slice(-1)[0]
+  div.innerHTML = "<h3>Previous Game Score</h3>"
+  let name = document.createElement('h4')
+  name.textContent = `Player: ${lastPlayer.name}`
+
+  let score = document.createElement('h4')
+  score.textContent = `Score: ${lastPlayer.score}`
+
+  div.append(name, score)
 }
 
 function setPlayerAttributes() {
@@ -146,30 +161,52 @@ function setPlayerAttributes() {
     health: _currentHealth
   }
 
-  let configObj = {
+  /////////////////OLD FETCH////////////////////
+
+  // let configObj = {
+  //   method: "PATCH",
+  //   headers: {
+  //     "Accept": "application/json",
+  //     "content-type": "application/json"
+  //   },
+  //   body: JSON.stringify(data)
+  // }
+  //
+  // fetch(`${PLAYERS_URL}/${_current_player.id}`, configObj)
+  //   .then(res => res.json())
+  //   .then((data) => {
+  //     console.log(data)
+  //     _players.push(data)
+  //     _current_player = data
+  //   })
+/////////////////////////////////////////////////
+
+//////////////NEW FETCH///////////////////////////
+let promise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
     method: "PATCH",
     headers: {
-      "Accept": "application/json",
-      "content-type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
     },
     body: JSON.stringify(data)
-  }
+}).then(res => res.json())
 
-  fetch(`${PLAYERS_URL}/${_current_player.id}`, configObj)
-    .then(res => res.json())
-    .then((data) => {
-      _players.push(data)
-      _current_player = data
-    })
+Promise.all([promise]).then(data => {
+    console.log(data[0])
+    _players.push(data[0])
+    _current_player = data[0]
+    home.append(visitBtn)
+    visitBtn.addEventListener("click", () => renderPlanet(_current_player))
+})
+//////////////////////////////////////////////////
 
-    console.log(_current_player)
 
 }
 
 function renderLeaderboard() {
   leaderboard.innerHTML = ""
   leaderboard.innerHTML = "<h3>Leaderboard</h3>"
-  let sortedPlayers = _players.sort(function(a, b){return a.score-b.score})
+  let sortedPlayers = [..._players].sort(function(a, b){return a.score-b.score})
   let top5Players = sortedPlayers.slice(Math.max(sortedPlayers.length - 5, 1))
   top5Players.reverse()
   console.log(top5Players)
@@ -217,6 +254,6 @@ function renderPlayer(player) {
   playerPotion.textContent = potion.name
 
   home.append(playerName, playerScore, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
-  home.append(visitBtn)
-  visitBtn.addEventListener("click", () => renderPlanet(_current_player))
+
+  console.log(_current_player)
 }

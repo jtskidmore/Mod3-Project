@@ -6,6 +6,8 @@
 function renderPlanet(player) {
     console.log(player)
     home.style.display = "none"
+    leaderboard.style.display = "none"
+    div.style.display = "none"
     game.innerHTML = ''
     let playerId = player.id
     let planetId = _planets[Math.floor(Math.random() * _planets.length)].id
@@ -17,23 +19,51 @@ function renderPlanet(player) {
         npc_id: npcId
     }
 
-    let configObj = {
-        method: "POST",
-        headers: {
-            "Accept": "application/json",
-            "content-type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }
+    //////////////////////////////////////////
 
-    fetch(PLAYERPLANETS_URL, configObj)
-        .then(res => res.json())
-        .then((data) => {
-            _player_planets.push(data)
-            _currentPlanet = data
-            renderPlayerPlanet(data)
-            // console.log(data)
+
+    //
+    //
+    // let configObj = {
+    //     method: "POST",
+    //     headers: {
+    //         "Accept": "application/json",
+    //         "content-type": "application/json"
+    //     },
+    //     body: JSON.stringify(data)
+    // }
+    //
+    // fetch(PLAYERPLANETS_URL, configObj)
+    //     .then(res => res.json())
+    //     .then((data) => {
+    //         _player_planets.push(data)
+    //         _currentPlanet = data
+    //         renderPlayerPlanet(data)
+    //         console.log(data)
+    //     })
+
+
+        ////////////////////////////////////////////
+
+
+        let promise = fetch(PLAYERPLANETS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json())
+
+        Promise.all([promise]).then(data => {
+          _player_planets.push(data[0])
+          _currentPlanet = data[0]
+          renderPlayerPlanet(data[0])
         })
+
+
+
+        ////////////////////////////////////////////
 }
 
 function renderPlayerPlanet(playerplanet) {
@@ -213,8 +243,20 @@ function consumePotion() {
 }
 
 function attack() {
+    _playerAttack = _current_player.attack
+    let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
+    let damagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
+    _playerAttack = _playerAttack + damagePointDifference
     _npcHealth = _npcHealth - _playerAttack
-    alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}`)
+
+    if (damagePointDifference > 0) {
+      alert(`Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`)
+    } else if (damagePointDifference == 0) {
+      alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
+    } else if (damagePointDifference < 0) {
+      alert(`Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
+    }
+
     if (_npcHealth <= 0) {
       //var = player score plus planet score
       let planetPointValue = _planets.filter((planet) => planet.id === _currentPlanet.planet_id)[0].point_value
@@ -250,18 +292,35 @@ function attack() {
 }
 
 function enemyAttack() {
+    _npcAttack = _currentNpc.attack
+    let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
+    let damagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
+    console.log(damagePointDifference)
+    _npcAttack = _npcAttack + damagePointDifference
+    console.log(_npcAttack)
     _currentHealth = _currentHealth - _npcAttack
+    console.log(_currentHealth)
     alert(`${_currentNpc.name} is preparing their attack...`)
-    alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!!!`)
+    if (damagePointDifference > 0) {
+      alert(`${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`)
+    } else if (damagePointDifference == 0) {
+      alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`)
+    } else if (damagePointDifference < 0) {
+      alert(`${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`)
+    }
     if (_currentHealth <= 0) {
         _players.push(_current_player)
         alert(`${_currentNpc.name} has defeated you!`)
         alert(`Returning to base...`)
-        renderLeaderboard()
+        document.location.reload(true)
+        // renderLeaderboard()
         //grab player score and add it to leaderboard
 
-        game.style.display = 'none'
-        home.style.display = 'block'
+        // game.style.display = 'none'
+        // home.innerHTML = ""
+        // home.append(form)
+        // home.style.display = 'block'
+        // leaderboard.style.display = "block"
     } else {
         document.getElementById('player-health').textContent = `Health: ${_currentHealth}`
     }
