@@ -21,11 +21,6 @@ droid = Type.create(name: "Droid", strength: "brute force", weakness: "can't spe
 
 
 
-# leia = Player.create(name: "Leia", health: 100, defense: 50, attack: 75, score: 0, type_id: 1)
-# han = Player.create(name: "Han", health: 100, defense: 50, attack: 75, score: 0, type_id: 1)
-# yoda = Player.create(name: "Yoda", health: 100, defense: 50, attack: 75, score: 0, type_id: 3)
-# chewie = Player.create(name: "Chewie", health: 100, defense: 50, attack: 75, score: 0, type_id: 2)
-# jarjar = Player.create(name: "Jar-Jar Binks", health: 5, defense: 50, attack: 75, score: 0, type_id: 3)
 
 
 lightsaber = Weapon.create(name: "lightsaber", damage: "30")
@@ -81,3 +76,10 @@ watto = Npc.create(name:"Watto", health:100, attack:0, defense:0, is_friendly:tr
 trader2 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:6, potion_id:1, type_id:1)
 trader3 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:7, potion_id:2, type_id:1)
 trader4 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:8, potion_id:2, type_id:1)
+
+
+p1 = Player.create(name: "Player 1", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
+p2 = Player.create(name: "Player 2", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
+p3 = Player.create(name: "Player 3", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
+p4 = Player.create(name: "Player 4", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
+p5 = Player.create(name: "Player 5", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)

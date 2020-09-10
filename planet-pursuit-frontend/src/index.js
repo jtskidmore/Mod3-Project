@@ -1,5 +1,4 @@
 
-
 const PLAYERS_URL = "http://localhost:3000/players"
 const TYPES_URL = "http://localhost:3000/types"
 const WEAPONS_URL = "http://localhost:3000/weapons"
@@ -18,6 +17,7 @@ form.id = "player-form"
 const visitBtn = document.createElement('button')
 visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
+visitBtn.className = 'button-clear'
 
 const leaderboard = document.getElementById("leaderboard")
 
@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     createForm(_types);
     renderPreviousGameStats(_players);
+    // x0p('Message', 'Hello world!', 'info');
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -115,6 +116,7 @@ function createForm(data) {
   })
 
   let newButton = document.createElement('button')
+  newButton.className= "button-clear"
   newButton.innerText = "Create Player!"
 
   form.append(nameIn, typeSelect, newButton)

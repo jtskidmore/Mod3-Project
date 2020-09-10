@@ -133,14 +133,17 @@ function renderPlayerPlanet(playerplanet) {
 
         let tradeWeaponBtnYes = document.createElement('button')
         tradeWeaponBtnYes.id = 'trade-weapon-yes'
+        tradeWeaponBtnYes.className = 'button-clear'
         tradeWeaponBtnYes.textContent = 'Trade Weapon'
 
         let tradePotionBtnYes = document.createElement('button')
         tradePotionBtnYes.id = 'trade-potion-yes'
+        tradePotionBtnYes.className = 'button-clear'
         tradePotionBtnYes.textContent = 'Trade/Accept Potion'
 
         let tradeBtnNo = document.createElement('button')
         tradeBtnNo.id = 'trade-no'
+        tradeBtnNo.className = 'button-clear'
         tradeBtnNo.textContent = 'No'
         game.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
         createTradeListeners()
@@ -202,18 +205,21 @@ function renderPlayerPlanet(playerplanet) {
         if (player.potion_id != 3) {
             let takePotion = document.createElement('button')
             takePotion.id = 'take-potion'
+            takePotion.className = 'button-clear'
             takePotion.textContent = 'Take Potion'
             game.append(takePotion)
         }
         if (player.score >= 100) {
             let runBtn = document.createElement('button')
             runBtn.id = 'run-btn'
+            runBtn.className = 'button-clear'
             runBtn.textContent = 'Run (-100 pts)'
             game.append(runBtn)
         }
 
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
+        attackBtn.className = 'button-clear'
         attackBtn.textContent = 'Attack'
 
         game.append(attackBtn)
