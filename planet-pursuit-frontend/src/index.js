@@ -10,7 +10,13 @@ const PLAYERPLANETS_URL = "http://localhost:3000/player_planets"
 
 const home = document.getElementById("home")
 const game = document.getElementById("game")
-const div = document.getElementById('previous-game-stats')
+
+const lastGameStats = document.getElementById('previous-game-stats')
+lastGameStatsTitle = document.createElement('div')
+lastGameStatsTitle.classList = 'card-body'
+lastGameStatsTitle.id = 'lastGameStats-title'
+const lastGameStatsList = document.createElement('ul')
+lastGameStatsList.classList = "list-group list-group-flush"
 
 const form = document.createElement('form')
 form.id = "player-form"
@@ -20,6 +26,14 @@ visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
 
 const leaderboard = document.getElementById("leaderboard")
+const leaderboardTitle = document.createElement("div")
+leaderboardTitle.classList = "card-body"
+leaderboardTitle.id = "leaderboard-title"
+const leaderboardList = document.createElement('ol')
+leaderboardList.classList = "list-group list-group-flush"
+
+
+
 
 
 let _types
@@ -61,8 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      let playerName = e.target["name"].value
-      let playerType = e.target["type"].value
+      let playerName = e.target["form-name"].value
+      let playerType = e.target["form-type"].value
 
       let data = {
         name: playerName,
@@ -99,13 +113,17 @@ function createForm(data) {
 
   console.log(data)
   let formDiv = document.createElement('div')
+  formDiv.classList = "form-group"
+  formDiv.id = "form-div"
 
   let nameIn = document.createElement('input')
-  nameIn.id = "name"
-  nameIn.placeholder = "name player!"
+  nameIn.id = "form-name"
+  nameIn.placeholder = "Name player!"
+  nameIn.classList = "form-control"
 
   let typeSelect = document.createElement('select')
-  typeSelect.id = "type"
+  typeSelect.id = "form-type"
+  typeSelect.classList = "form-control"
 
   data.forEach((type) => {
     let option = document.createElement('option')
@@ -115,7 +133,9 @@ function createForm(data) {
   })
 
   let newButton = document.createElement('button')
+  newButton.id = "form-button"
   newButton.innerText = "Create Player!"
+  newButton.classList = "btn btn-primary"
 
   form.append(nameIn, typeSelect, newButton)
 
@@ -127,17 +147,32 @@ function createForm(data) {
 
 }
 
+//
+////
+////////
+////////////////
+////////////////////////////////
+
 function renderPreviousGameStats (_players) {
   let lastPlayer = _players.slice(-1)[0]
-  div.innerHTML = "<h3>Previous Game Score</h3>"
-  let name = document.createElement('h4')
+  lastGameStatsTitle.innerHTML = "<h3>Previous Game Score</h3>"
+
+  let name = document.createElement('li')
   name.textContent = `Player: ${lastPlayer.name}`
 
-  let score = document.createElement('h4')
+  let score = document.createElement('li')
   score.textContent = `Score: ${lastPlayer.score}`
 
-  div.append(name, score)
+  lastGameStatsList.append(name, score)
+
+  lastGameStats.append(lastGameStatsTitle, lastGameStatsList)
 }
+
+//
+////
+////////
+////////////////
+////////////////////////////////
 
 function setPlayerAttributes() {
   if (_current_player.type_id === 1) { //human, lightsaber
@@ -217,16 +252,17 @@ Promise.all([promise]).then(data => {
 
 function renderLeaderboard() {
   leaderboard.innerHTML = ""
-  leaderboard.innerHTML = "<h3>Leaderboard</h3>"
+  leaderboard.append(leaderboardTitle)
+  leaderboardTitle.innerHTML = "<h3>Leaderboard</h3>"
   let sortedPlayers = [..._players].sort(function(a, b){return a.score-b.score})
   let top5Players = sortedPlayers.slice(Math.max(sortedPlayers.length - 5, 1))
   top5Players.reverse()
-  console.log(top5Players)
   top5Players.forEach(player => {
     let li = document.createElement('li')
     li.textContent = `${player.name} Score: ${player.score}`
-    leaderboard.append(li)
+    leaderboardList.append(li)
   })
+  leaderboard.append(leaderboardList)
 }
 
 function renderPlayer(player) {
@@ -234,6 +270,9 @@ function renderPlayer(player) {
   setPlayerAttributes()
 
   let home = document.getElementById('home')
+
+  let container = document.createElement('div')
+  container.classList = "container"
 
   let homePlayerStats = document.createElement('ul')
   homePlayerStats.innerHTML = `<h3>${player.name}</h3>`

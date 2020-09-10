@@ -1,13 +1,61 @@
+let timeoutID;
+const y = ''
 
-
-
-
-
+/////////custom alert//////////
+function customAlert(text, callback, callbackParam, delay) {
+    let alertDiv = document.createElement('div')
+    alertDiv.className = 'alert alert-primary alert-dismissible fade show'
+    alertDiv.setAttribute('role', 'alert')
+    let alertWin = document.getElementById('alert-window')
+    alertDiv.innerHTML = `<p>${text}</p><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>`
+    console.log(alertDiv.innerHTML)
+    alertWin.append(alertDiv)
+    timeoutID = setTimeout(function () { callback(callbackParam) }, delay)
+    timeoutID = setTimeout(function () { $('.alert').alert('close') }, 1500)
+}
+function customAlert2(text, callback, callbackParam, delay) {
+    let alertDiv = document.createElement('div')
+    alertDiv.className = 'alert alert-primary alert-dismissible fade show'
+    alertDiv.setAttribute('role', 'alert')
+    let alertWin = document.getElementById('alert-window')
+    alertDiv.innerHTML = `<p>${text}</p><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>`
+    console.log(alertDiv.innerHTML)
+    alertWin.append(alertDiv)
+    timeoutID = setTimeout(function () { callback(callbackParam) }, delay)
+    timeoutID = setTimeout(function () { $('.alert').alert('close') }, 4500)
+}
+function customAlert3(text, callback, callbackParam, delay) {
+    let alertDiv = document.createElement('div')
+    alertDiv.className = 'alert alert-primary alert-dismissible fade show'
+    alertDiv.setAttribute('role', 'alert')
+    let alertWin = document.getElementById('alert-window')
+    alertDiv.innerHTML = `<p>${text}</p><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>`
+    console.log(alertDiv.innerHTML)
+    alertWin.append(alertDiv)
+    timeoutID = setTimeout(function () { callback(callbackParam) }, delay)
+    timeoutID = setTimeout(function () { $('.alert').alert('close') }, 4000)
+}
+///////////reload function///////////////////
+function reload() {
+    // console.log('reload')
+    document.location.reload(true)
+}
+///////////this does nothing but we need a placeholder function//////////////////
+function x(y) {
+    console.log(y)
+}
+///////////////////////////
 function renderPlanet(player) {
     console.log(player)
     home.style.display = "none"
     leaderboard.style.display = "none"
-    div.style.display = "none"
+    // div.style.display = "none"
     game.innerHTML = ''
     let playerId = player.id
     let planetId = _planets[Math.floor(Math.random() * _planets.length)].id
@@ -18,33 +66,6 @@ function renderPlanet(player) {
         planet_id: planetId,
         npc_id: npcId
     }
-
-    //////////////////////////////////////////
-
-
-    //
-    //
-    // let configObj = {
-    //     method: "POST",
-    //     headers: {
-    //         "Accept": "application/json",
-    //         "content-type": "application/json"
-    //     },
-    //     body: JSON.stringify(data)
-    // }
-    //
-    // fetch(PLAYERPLANETS_URL, configObj)
-    //     .then(res => res.json())
-    //     .then((data) => {
-    //         _player_planets.push(data)
-    //         _currentPlanet = data
-    //         renderPlayerPlanet(data)
-    //         console.log(data)
-    //     })
-
-
-    ////////////////////////////////////////////
-
 
     let promise = fetch(PLAYERPLANETS_URL, {
         method: "POST",
@@ -60,16 +81,42 @@ function renderPlanet(player) {
         _currentPlanet = data[0]
         renderPlayerPlanet(data[0])
     })
+}
 
+function exitGame() {
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
 
-
-    ////////////////////////////////////////////
+    fetch(`${PLAYERS_URL}/${_current_player.id}`, options)
+        .then(res => {
+            if (res.ok) {
+                quitAlert = `Quitting and returning to base...`
+                customAlert(quitAlert, reload, y, 2000)
+                return Promise.resolve('Player deleted.');
+            } else {
+                return Promise.reject('An error occurred.');
+            }
+        })
+        .then(res => console.log(res));
 }
 
 function renderPlayerPlanet(playerplanet) {
-    // console.log(playerplanet)
+
+    let exit = document.getElementById('footer')
+    exit.style.display = "block"
+
+    let exitBtn = document.createElement('button')
+    exitBtn.textContent = "Quit Game"
+    exit.append(exitBtn)
+
+    exitBtn.addEventListener('click', () => exitGame())
+
     let planetPlayer = document.createElement("h5")
-    // let player = _players.filter((player) => player.id === playerplanet.player_id)[0]
+
     let player = _current_player
     planetPlayer.textContent = player.name
 
@@ -77,6 +124,8 @@ function renderPlayerPlanet(playerplanet) {
     let planet = _planets.filter((planet) => planet.id === playerplanet.planet_id)[0]
     planetPlanet.textContent = `Welcome to ${planet.name}, ${player.name}!`
 
+    let body = document.getElementsByTagName("BODY")[0]
+    body.style.backgroundImage = `url(images/planets/${planet.name}.jpg)`
 
     let planetNpc = document.createElement("h5")
     _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
@@ -86,8 +135,8 @@ function renderPlayerPlanet(playerplanet) {
     _npcDefense = npc.defense
     _npcWeapon = _weapons.filter(weapon => weapon.id === npc.weapon_id)[0]
     if (npc.is_friendly == true) {
+
         planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for a weapon or potion?`
-        ///////////////////////////
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
         let statList = document.createElement('ul')
@@ -252,9 +301,10 @@ function acceptTradePotion() {
         .then((player) => {
             _currentPotion = _potions.filter((potion) => potion.id === player.potion_id)[0]
         })
-    alert(`Your potion is now a ${_potions.filter((potion) => potion.id === npc.potion_id)[0].name} potion!`)
-    alert('Traveling to new planet...')
-    renderPlanet(_current_player)
+    let potionAlert = `Your potion is now a ${_potions.filter((potion) => potion.id === npc.potion_id)[0].name} potion!`
+    customAlert(potionAlert, x, y, 1000)
+    let travelAlert = 'Traveling to new planet...'
+    timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 2000)
 }
 
 function acceptTradeWeapon() {
@@ -275,14 +325,15 @@ function acceptTradeWeapon() {
         .then((player) => {
             _currentWeapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
         })
-    alert(`Your weapon is now a ${_weapons.filter((weapon) => weapon.id === npc.weapon_id)[0].name}!`)
-    alert('Traveling to new planet...')
-    renderPlanet(_current_player)
+    let weaponAlert = `Your weapon is now a ${_weapons.filter((weapon) => weapon.id === npc.weapon_id)[0].name}!`
+    customAlert(weaponAlert, x, y, 1000)
+    let travelAlert = 'Traveling to new planet...'
+    timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 2000)
 }
 
 function denyTrade() {
-    alert("Traveling to new planet...")
-    renderPlanet(_current_player)
+    let travelAlert = 'Traveling to new planet...'
+    customAlert3(travelAlert, renderPlanet, _current_player, 1000)
 }
 
 function createFightListeners() {
@@ -318,9 +369,9 @@ function runFarAway() {
     }).then(res => res.json())
 
     Promise.all([healthPromise]).then(data => {
-        alert("Fleeing to new planet...")
         _current_player = data[0]
-        renderPlanet(_current_player)
+        let fleeAlert = 'Fleeing to new planet...'
+        customAlert(fleeAlert, renderPlanet, _current_player, 2000) 
     })
 }
 
@@ -331,7 +382,8 @@ function consumePotion() {
     console.log(newHealth)
     document.getElementById('take-potion').style.display = 'none'
     document.getElementById('player-potion').textContent = `Potion: none`
-    alert("Your health has been increased!")
+    let healthAlert = "Your health has been increased!"
+    customAlert(healthAlert, x, y, 1000)
     document.getElementById('player-health').textContent = `Health: ${newHealth}`
 
     let player = {
@@ -361,19 +413,22 @@ function attack() {
     _npcHealth = _npcHealth - _playerAttack
 
     if (damagePointDifference > 0) {
-        alert(`Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`)
+        let vEffectiveAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`
+        customAlert(vEffectiveAlert, x, y, 1000)
     } else if (damagePointDifference == 0) {
-        alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
+        let effectiveAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        customAlert(effectiveAlert, x, y, 1000)
     } else if (damagePointDifference < 0) {
-        alert(`Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
-    }
+        let weakEffectiveAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        customAlert(weakEffectiveAlert, x, y, 1000) }
 
     if (_npcHealth <= 0) {
         //var = player score plus planet score
         _currentPlanet.point_value = _currentNpc.defense
-        _currentScore = _currentScore + _currentPlanet.point_value 
+        _currentScore = _currentScore + _currentPlanet.point_value
 
-        alert(`You have defeated ${_currentNpc.name}!!!`)
+        let defeatAlert = `You have defeated ${_currentNpc.name}!!!`
+        timeoutID = setTimeout(function() {customAlert(defeatAlert, x, y, 1000)}, 2000)
         let player = {
             health: _currentHealth,
             score: _currentScore
@@ -389,15 +444,15 @@ function attack() {
         }).then(res => res.json())
 
         Promise.all([healthPromise]).then(data => {
-            alert('Traveling to new planet...')
             _current_player = data[0]
-            renderPlanet(_current_player)
+            let travelAlert = 'Traveling to new planet...'
+            timeoutID = setTimeout(function () { customAlert3(travelAlert, renderPlanet, _current_player, 1500) }, 2000)
         })
         // renderPlanet(_current_player)
 
     } else {
         document.getElementById('npc-health').textContent = `Health: ${_npcHealth}`
-        enemyAttack()
+        timeoutID = setTimeout(function() {enemyAttack()}, 1000)
     }
 
 }
@@ -411,19 +466,25 @@ function enemyAttack() {
     console.log(_npcAttack)
     _currentHealth = _currentHealth - _npcAttack
     console.log(_currentHealth)
-    alert(`${_currentNpc.name} is preparing their attack...`)
+    let prepareAlert = `${_currentNpc.name} is preparing their attack...`
+    timeoutID = setTimeout(function() {customAlert(prepareAlert, x, y, 1000)}, 1000)
     if (damagePointDifference > 0) {
-        alert(`${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`)
+        let npcVeryEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`
+        timeoutID = setTimeout(function() {customAlert2(npcVeryEffectiveAlert, x, y, 1000)}, 3000)
     } else if (damagePointDifference == 0) {
-        alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`)
+        let npcEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`
+        timeoutID = setTimeout(function() {customAlert2(npcEffectiveAlert, x, y, 1000)}, 3000)
     } else if (damagePointDifference < 0) {
-        alert(`${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`)
+        let npcWeakEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`
+        timeoutID = setTimeout(function() {customAlert2(npcWeakEffectiveAlert, x, y, 1000)}, 3000)
     }
     if (_currentHealth <= 0) {
         _players.push(_current_player)
-        alert(`${_currentNpc.name} has defeated you!`)
-        alert(`Returning to base...`)
-        document.location.reload(true)
+        let defeatAlert = `${_currentNpc.name} has defeated you!`
+        timeoutID = setTimeout(function() {customAlert(defeatAlert, x, y, 2000)}, 1000)
+        let returnAlert = `Returning to base...`
+        timeoutID = setTimeout(function() {customAlert3(returnAlert, x, y, 2000)}, 1000)
+        timeoutID = setTimeout(function() { document.location.reload() }, 2500)
         // renderLeaderboard()
         //grab player score and add it to leaderboard
 
@@ -435,4 +496,7 @@ function enemyAttack() {
     } else {
         document.getElementById('player-health').textContent = `Health: ${_currentHealth}`
     }
+}
+function defeatReload() {
+    document.location.reload()
 }
