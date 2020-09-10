@@ -140,17 +140,29 @@ function renderPreviousGameStats (_players) {
 }
 
 function setPlayerAttributes() {
-  if (_current_player.type_id === 1) {
+  if (_current_player.type_id === 1) { //human, lightsaber
     _currentWeapon = _weapons.filter((weapon) => weapon.id === 1)[0]
     _playerAttack = _currentWeapon.damage
     _currentHealth = 100
     console.log(_currentWeapon)
-  } else if (_current_player.type_id === 2) {
-    _currentWeapon = _weapons.filter((weapon) => weapon.id === 2)[0]
+  } else if (_current_player.type_id === 2) { //wookie, blaster
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 3)[0]
     _playerAttack = _currentWeapon.damage
     _currentHealth = 150
-  } else if (_current_player.type_id === 3) {
-    _currentWeapon = _weapons.filter((weapon) => weapon.id === 3)[0]
+  } else if (_current_player.type_id === 3) { //gungan, spear
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 6)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 100
+  } else if (_current_player.type_id === 4) { //jawa, grafitti stick
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 7)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 110
+  } else if (_current_player.type_id === 5) { //mandalorian, blaster rifle
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 4)[0]
+    _playerAttack = _currentWeapon.damage
+    _currentHealth = 135
+  } else if (_current_player.type_id === 6) { //droid, slugthrower
+    _currentWeapon = _weapons.filter((weapon) => weapon.id === 5)[0]
     _playerAttack = _currentWeapon.damage
     _currentHealth = 125
   }
@@ -222,38 +234,31 @@ function renderPlayer(player) {
   setPlayerAttributes()
 
   let home = document.getElementById('home')
-  let playerName = document.createElement("h1")
-  playerName.textContent = player.name
 
-  let playerType = document.createElement("h4")
-  playerType.textContent = player.type
+  let homePlayerStats = document.createElement('ul')
+  homePlayerStats.innerHTML = `<h3>${player.name}</h3>`
 
-  let playerHealth = document.createElement("h2")
-  playerHealth.textContent = _currentHealth
+  let playerType = document.createElement("li")
+  playerType.textContent = `Type: ${player.type}`
 
-  let playerScore = document.createElement("h2")
-  playerScore.textContent = player.score
+  let playerHealth = document.createElement("li")
+  playerHealth.textContent = `Health: ${_currentHealth}`
+
+  let playerScore = document.createElement("li")
+  playerScore.textContent = `Score: ${player.score}`
   _currentScore = player.score
 
-  let playerDefense = document.createElement("h3")
-  playerDefense.textContent = player.defense
-  _playerDefense = player.defense
+  let playerAttack = document.createElement("li")
+  playerAttack.textContent = `Attack: ${_playerAttack}`
 
-  let playerAttack = document.createElement("h4")
-  playerAttack.textContent = _playerAttack
+  let playerWeapon = document.createElement("li")
+  playerWeapon.textContent = `Weapon: ${_currentWeapon.name}`
 
-  let playerWeapon = document.createElement("h5")
-  // let weapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
-  // _currentWeapon = weapon
-  playerWeapon.textContent = _currentWeapon.name
-  // playerWeapon.textContent =
-
-  let playerPotion = document.createElement("h5")
+  let playerPotion = document.createElement("li")
   let potion = _potions.filter((potion) => potion.id === player.potion_id)[0]
   _currentPotion = potion
-  playerPotion.textContent = potion.name
+  playerPotion.textContent = `Potion: ${potion.name}`
 
-  home.append(playerName, playerScore, playerHealth, playerDefense, playerAttack, playerWeapon, playerPotion)
-
-  console.log(_current_player)
+  homePlayerStats.append(playerScore, playerHealth, playerAttack, playerWeapon, playerPotion)
+  home.append(homePlayerStats)
 }

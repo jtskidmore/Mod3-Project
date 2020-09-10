@@ -43,27 +43,27 @@ function renderPlanet(player) {
     //     })
 
 
-        ////////////////////////////////////////////
+    ////////////////////////////////////////////
 
 
-        let promise = fetch(PLAYERPLANETS_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(data)
-        }).then(res => res.json())
+    let promise = fetch(PLAYERPLANETS_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(res => res.json())
 
-        Promise.all([promise]).then(data => {
-          _player_planets.push(data[0])
-          _currentPlanet = data[0]
-          renderPlayerPlanet(data[0])
-        })
+    Promise.all([promise]).then(data => {
+        _player_planets.push(data[0])
+        _currentPlanet = data[0]
+        renderPlayerPlanet(data[0])
+    })
 
 
 
-        ////////////////////////////////////////////
+    ////////////////////////////////////////////
 }
 
 function renderPlayerPlanet(playerplanet) {
@@ -86,22 +86,73 @@ function renderPlayerPlanet(playerplanet) {
     _npcDefense = npc.defense
     _npcWeapon = _weapons.filter(weapon => weapon.id === npc.weapon_id)[0]
     if (npc.is_friendly == true) {
-        planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for an item?`
-        let tradeBtnYes = document.createElement('button')
-        tradeBtnYes.id = 'trade-yes'
-        tradeBtnYes.textContent = 'Yes'
+        planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for a weapon or potion?`
+        ///////////////////////////
+        let playerStats = document.createElement('div')
+        playerStats.id = 'player-stats'
+        let statList = document.createElement('ul')
+        statList.innerHTML = `<h3>${player.name}</h3>`
+
+        let playerWeapon = document.createElement('li')
+        playerWeapon.textContent = `Weapon: ${_currentWeapon.name}`
+
+        let playerPotion = document.createElement('li')
+        playerPotion.textContent = `Potion: ${_currentPotion.name}`
+        playerPotion.id = 'player-potion'
+
+        statList.append(playerWeapon, playerPotion)
+        playerStats.append(statList)
+
+        let npcStats = document.createElement('div')
+        npcStats.id = 'npc-stats'
+
+        let npcStatList = document.createElement('ul')
+        if (npc.name == "A trader") {
+            let newName = npc.name.split(" ")[1]
+            let newNewName = newName.charAt(0).toUpperCase() + newName.slice(1)
+            npcStatList.innerHTML = `<h3>${newNewName}</h3>`
+        } else {
+            npcStatList.innerHTML = `<h3>${npc.name}</h3>`
+        }
+
+
+        let npcPotion = document.createElement('li')
+        let npcPotionEquipped = _potions.filter((potion) => potion.id === npc.potion_id)[0]
+        npcPotion.textContent = `Potion: ${npcPotionEquipped.name}`
+        npcPotion.id = 'npc-potion'
+
+        let npcWeapon = document.createElement('li')
+        let npcWeaponEquipped = _weapons.filter((weapon) => weapon.id === npc.weapon_id)[0]
+        npcWeapon.textContent = `Weapon: ${npcWeaponEquipped.name}`
+
+        npcStatList.append(npcPotion, npcWeapon)
+        npcStats.append(npcStatList)
+
+        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        /////////////////////
+
+        let tradeWeaponBtnYes = document.createElement('button')
+        tradeWeaponBtnYes.id = 'trade-weapon-yes'
+        tradeWeaponBtnYes.textContent = 'Trade Weapon'
+
+        let tradePotionBtnYes = document.createElement('button')
+        tradePotionBtnYes.id = 'trade-potion-yes'
+        tradePotionBtnYes.textContent = 'Trade/Accept Potion'
+
         let tradeBtnNo = document.createElement('button')
         tradeBtnNo.id = 'trade-no'
         tradeBtnNo.textContent = 'No'
-        game.append(planetPlanet, planetNpc, tradeBtnYes, tradeBtnNo)
+        game.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
         createTradeListeners()
     } else {
         planetNpc.textContent = `${npc.name} is here to fight you!`
 
         //player stats list
+
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
         let statList = document.createElement('ul')
+        statList.innerHTML = `<h3>${player.name}</h3>`
 
         let playerScore = document.createElement('li')
         playerScore.textContent = `Score: ${player.score}`
@@ -132,6 +183,7 @@ function renderPlayerPlanet(playerplanet) {
         npcStats.id = 'npc-stats'
 
         let npcStatList = document.createElement('ul')
+        npcStatList.innerHTML = `<h3>${npc.name}</h3>`
 
         let npcHealth = document.createElement('li')
         npcHealth.textContent = `Health: ${npc.health}`
@@ -153,6 +205,12 @@ function renderPlayerPlanet(playerplanet) {
             takePotion.textContent = 'Take Potion'
             game.append(takePotion)
         }
+        if (player.score >= 100) {
+            let runBtn = document.createElement('button')
+            runBtn.id = 'run-btn'
+            runBtn.textContent = 'Run (-100 pts)'
+            game.append(runBtn)
+        }
 
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
@@ -167,14 +225,39 @@ function renderPlayerPlanet(playerplanet) {
 }
 
 function createTradeListeners() {
-    let tradeYesBtn = document.getElementById('trade-yes')
-    tradeYesBtn.addEventListener('click', () => acceptTrade())
+    let tradeWeaponYesBtn = document.getElementById('trade-weapon-yes')
+    tradeWeaponYesBtn.addEventListener('click', () => acceptTradeWeapon())
+    let tradePotionYesBtn = document.getElementById('trade-potion-yes')
+    tradePotionYesBtn.addEventListener('click', () => acceptTradePotion())
     let tradeNoBtn = document.getElementById('trade-no')
     tradeNoBtn.addEventListener('click', () => denyTrade())
 
 }
 
-function acceptTrade() {
+function acceptTradePotion() {
+    let npc = _npcs.filter((npc) => npc.id === _currentPlanet.npc_id)[0]
+    let npcPotion = npc.potion_id
+    let player = {
+        // id: _current_player.id,
+        potion_id: npcPotion
+    }
+    fetch(`${PLAYERS_URL}/${_current_player.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(player)
+    }).then(res => res.json())
+        .then((player) => {
+            _currentPotion = _potions.filter((potion) => potion.id === player.potion_id)[0]
+        })
+    alert(`Your potion is now a ${_potions.filter((potion) => potion.id === npc.potion_id)[0].name} potion!`)
+    alert('Traveling to new planet...')
+    renderPlanet(_current_player)
+}
+
+function acceptTradeWeapon() {
     let npc = _npcs.filter((npc) => npc.id === _currentPlanet.npc_id)[0]
     let npcWeapon = npc.weapon_id
     let player = {
@@ -208,9 +291,37 @@ function createFightListeners() {
         takeFightPotion.addEventListener('click', () => consumePotion())
     }
 
+    if (_currentScore >= 100) {
+        let runAway = document.getElementById('run-btn')
+        runAway.addEventListener('click', () => runFarAway())
+    }
+
     let attackFightBtn = document.getElementById('attack-btn')
     attackFightBtn.addEventListener('click', () => attack())
 
+}
+
+function runFarAway() {
+    _currentScore = _currentScore - 100
+    let player = {
+        health: _currentHealth,
+        score: _currentScore
+        // score: //var
+    }
+    let healthPromise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(player)
+    }).then(res => res.json())
+
+    Promise.all([healthPromise]).then(data => {
+        alert("Fleeing to new planet...")
+        _current_player = data[0]
+        renderPlanet(_current_player)
+    })
 }
 
 function consumePotion() {
@@ -250,17 +361,17 @@ function attack() {
     _npcHealth = _npcHealth - _playerAttack
 
     if (damagePointDifference > 0) {
-      alert(`Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`)
+        alert(`Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`)
     } else if (damagePointDifference == 0) {
-      alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
+        alert(`Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
     } else if (damagePointDifference < 0) {
-      alert(`Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
+        alert(`Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`)
     }
 
     if (_npcHealth <= 0) {
-      //var = player score plus planet score
-      let planetPointValue = _planets.filter((planet) => planet.id === _currentPlanet.planet_id)[0].point_value
-      _currentScore = _currentScore + planetPointValue
+        //var = player score plus planet score
+        _currentPlanet.point_value = _currentNpc.defense
+        _currentScore = _currentScore + _currentPlanet.point_value 
 
         alert(`You have defeated ${_currentNpc.name}!!!`)
         let player = {
@@ -302,11 +413,11 @@ function enemyAttack() {
     console.log(_currentHealth)
     alert(`${_currentNpc.name} is preparing their attack...`)
     if (damagePointDifference > 0) {
-      alert(`${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`)
+        alert(`${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`)
     } else if (damagePointDifference == 0) {
-      alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`)
+        alert(`${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`)
     } else if (damagePointDifference < 0) {
-      alert(`${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`)
+        alert(`${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`)
     }
     if (_currentHealth <= 0) {
         _players.push(_current_player)
