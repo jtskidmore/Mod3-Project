@@ -103,10 +103,8 @@ function renderPlayerPlanet(playerplanet) {
     _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
     gameHeader.append(planetPlanet, planetNpc)
 
-    _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
-
-    _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
     let npc = _currentNpc
+    console.log(_currentNpc)
     _npcHealth = npc.health
     _npcAttack = npc.attack
     _npcDefense = npc.defense
