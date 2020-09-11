@@ -170,9 +170,9 @@ function renderPlayerPlanet(playerplanet) {
         tradeBtnNo.setAttribute('data-toggle', 'modal')
         tradeBtnNo.setAttribute('data-target', '#deny-trade-modal')
 
-        .append(playerStats, npcStats)
+        gameStatsContainer.append(playerStats, npcStats)
 
-        gameStatsContainer
+        
 
         let avatarContainer = document.createElement('div')
         avatarContainer.id = "avatar-container"
