@@ -61,6 +61,13 @@ function exitGame() {
 
 function renderPlayerPlanet(playerplanet) {
 
+    let gameHeader = document.createElement('div')
+    gameHeader.id = "game-header"
+
+    let gameStatsContainer = document.createElement('div')
+    gameStatsContainer.id = "game-stats-container"
+
+
     let exit = document.getElementById('footer')
     exit.style.display = "block"
     exit.innerHTML = ''
