@@ -1,16 +1,31 @@
 let timeoutID;
 let playerDamagePointDifference
 let npcDamagePointDifference;
+let tradePotionAlert = document.createElement('p')
+let tradeWeaponAlert = document.createElement('p')
+let denyTradeAlert = `It's good to be happy with what you have! Traveling to new planet...`
+let consumePotionAlert = document.createElement('p')
+let playerAttackAlert //= document.createElement('p')
+let playerAttackAlert2 = document.createElement('p')
+let playerAttackAlert3 = document.createElement('p')
+let npcPrepAlert
+let npcAttackAlert
+let travelAlert = 'Traveling to new planet...'
+let fleeAlert = document.createElement('p')
+let npcDefeatedAlert
+let playerDefeatedAlert = document.createElement('p')
+let quitAlert = `Quitting and returning to base...`
+let returnAlert = 'Returning to base...'
 
 function reload() {
     document.location.reload(true)
 }
 
-function makeNewPlanet(_currentPlanet, planetId) {
-    if (_currentPlanet.planet_id == planetId) {
-        planetId = _planets[Math.floor(Math.random() * _planets.length)].id
-    } 
-}
+// function makeNewPlanet(_currentPlanet, planetId) {
+//     if (_currentPlanet.planet_id == planetId) {
+//         planetId = _planets[Math.floor(Math.random() * _planets.length)].id
+//     } 
+// }
 
 function renderPlanet(player) {
     home.style.display = "none"
@@ -20,9 +35,9 @@ function renderPlanet(player) {
 
     let playerId = player.id
     let planetId = _planets[Math.floor(Math.random() * _planets.length)].id
-    if (_currentPlanet != undefined) {
-        makeNewPlanet(_currentPlanet, planetId)
-    }
+    // if (_currentPlanet != undefined) {
+    //     makeNewPlanet(_currentPlanet, planetId)
+    // }
     
     let npcId = _npcs[Math.floor(Math.random() * _npcs.length)].id
 
@@ -522,6 +537,8 @@ function consumePotion() {
 function attack() {
     _playerAttack = _current_player.attack
 
+    playerAttackAlert = ''
+
     let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
     playerDamagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
     _playerAttack = _playerAttack + playerDamagePointDifference
@@ -568,20 +585,32 @@ function showReturnModal() {
     timeoutID = setTimeout(function () { document.location.reload() }, 2000)
 }
 
+function removePlayerAttackModal() {
+    setTimeout(function () {document.getElementById('player-attack-modal').remove()}, 4500)
+}
+
 function playerAttackSequence(playerDamagePointDifference) {
     if (playerDamagePointDifference > 0) {
         playerAttackAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage!`
-        playerAttackModal()
+        playerAttackModal(playerAttackAlert)
         timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
         console.log(playerAttackAlert)
+        console.log(playerDamagePointDifference)
+        removePlayerAttackModal()
     } else if (playerDamagePointDifference == 0) {
         playerAttackAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage.`
-        playerAttackModal()
+        playerAttackModal(playerAttackAlert)
         timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
+        console.log(playerAttackAlert)
+        console.log(playerDamagePointDifference)
+        removePlayerAttackModal()
     } else if (playerDamagePointDifference < 0) {
         playerAttackAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage.`
-        playerAttackModal()
+        playerAttackModal(playerAttackAlert)
         timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
+        console.log(playerAttackAlert)
+        console.log(playerDamagePointDifference)
+        removePlayerAttackModal()
     }
     if (_npcHealth <= 0) {
         _currentPlanet.point_value = _currentNpc.defense
@@ -620,24 +649,398 @@ function playerAttackSequence(playerDamagePointDifference) {
     }
 }
 
+function removeNpcAttackModal() {
+    setTimeout(function () {document.getElementById('npc-attack-modal').remove()}, 4500)
+}
+
 function npcAttackSequence(_currentNpc, npcDamagePointDifference) {
     if (npcDamagePointDifference > 0) {
-        npcAttackAlert = `The enemy's attack was very effective!!!`
-        npcAttackModal()
+        npcAttackAlert = `${_currentNpc.name}'s attack was very effective!!!`
+        npcAttackModal(npcAttackAlert)
         console.log(npcAttackAlert)
+        console.log(npcDamagePointDifference)
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500) 
         timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide'); }, 4500)
+        
     } else if (npcDamagePointDifference == 0) {
-        npcAttackAlert = `The enemy's attack was moderately effective!`
-        npcAttackModal()
+        npcAttackAlert = `${_currentNpc.name}'s attack was moderately effective!`
+        npcAttackModal(npcAttackAlert) 
         console.log(npcAttackAlert)
+        console.log(npcDamagePointDifference)
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
         timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide');}, 4500)
+        
     } else if (npcDamagePointDifference < 0) {
-        npcAttackAlert = `The enemy's attack was not very effective.`
-        npcAttackModal()
+        npcAttackAlert = `${_currentNpc.name}'s attack was not very effective.`
+        npcAttackModal(npcAttackAlert)
         console.log(npcAttackAlert)
+        console.log(npcDamagePointDifference) 
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
         timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide'); }, 4500)
     }
+    removeNpcAttackModal()
+}
+
+
+
+function tradePotionModal() {
+  let closeBtn = document.createElement('button')
+  closeBtn.className = 'btn btn-primary'
+  closeBtn.setAttribute('data-dismiss', 'modal')
+  closeBtn.textContent = 'X'
+  closeBtn.setAttribute('data-toggle', 'modal')
+  closeBtn.setAttribute('data-target', 'travel-modal')
+  closeBtn.addEventListener('click', () => showTravelModal())
+
+  let modalFooter = document.createElement('div')
+  modalFooter.id = 'tradepotionfooter'
+  modalFooter.className = 'modal-footer'
+  modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(tradePotionAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody, modalFooter)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'trade-potion-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function tradeWeaponModal() {
+  let closeBtn = document.createElement('button')
+  closeBtn.className = 'btn btn-primary'
+  closeBtn.setAttribute('data-dismiss', 'modal')
+  closeBtn.textContent = 'X'
+  closeBtn.setAttribute('data-toggle', 'modal')
+  closeBtn.setAttribute('data-target', 'travel-modal')
+  closeBtn.addEventListener('click', () => showTravelModal())
+
+  let modalFooter = document.createElement('div')
+  modalFooter.id = 'tradeweaponfooter'
+  modalFooter.className = 'modal-footer'
+  modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(tradeWeaponAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody, modalFooter)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'trade-weapon-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function denyTradeModal() {
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'deny-trade-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.innerHTML = `<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${denyTradeAlert}</p>
+      </div>
+    </div>
+  </div>`
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function consumePotionModal() {
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(consumePotionAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'consume-potion-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+////////////////////////// attack sequence modals
+function playerAttackModal(playerAttackAlert) {  
+    console.log(playerAttackAlert)
+let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'player-attack-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.innerHTML = `
+    <div class="modal-dialog" id="player-attack-modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${playerAttackAlert}</p>
+      </div> 
+      
+    </div>
+  </div>`
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function npcPrepModal() {
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'npc-prep-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.innerHTML = `<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${npcPrepAlert}</p>
+      </div>
+      
+    </div>
+  </div>`
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function npcAttackModal(npcAttackAlert) {
+  console.log(npcAttackAlert)
+
+  // let closeBtn = document.createElement('button')
+  // closeBtn.className = 'btn btn-primary'
+  // closeBtn.setAttribute('data-dismiss', 'modal')
+  // closeBtn.textContent = 'X'
+
+  // let modalFooter = document.createElement('div')
+  // modalFooter.id = 'npc-attack-footer'
+  // modalFooter.className = 'modal-footer'
+  // modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(npcAttackAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'npc-attack-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+
+//////////////////////end attack sequence modals //////////////////////////
+
+function travelModal() {
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'travel-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.innerHTML = `<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${travelAlert}</p>
+      </div>
+    </div>
+  </div>`
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+
+}
+function fleeModal() {
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(fleeAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'flee-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+function npcDefeatedModal() {
+  let closeBtn = document.createElement('button')
+  closeBtn.className = 'btn btn-primary'
+  closeBtn.setAttribute('data-dismiss', 'modal')
+  closeBtn.textContent = 'X'
+  closeBtn.setAttribute('data-toggle', 'modal')
+  closeBtn.setAttribute('data-target', 'travel-modal')
+  closeBtn.addEventListener('click', () => showTravelModal())
+
+  let modalFooter = document.createElement('div')
+  modalFooter.className = 'modal-footer'
+  modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(npcDefeatedAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody, modalFooter)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'npc-defeated-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+  // let modal = document.createElement('div')
+  // modal.className = 'modal custom fade'
+  // modal.id = 'npc-defeated-modal'
+  // modal.setAttribute('tabindex', '-1')
+  // modal.innerHTML = `<div class="modal-dialog">
+  //   <div class="modal-content">
+  //     <div class="modal-body">
+  //       <p>${npcDefeatedAlert}</p>
+  //     </div>
+  //     <div class="modal-footer">
+  //       <button type="button" class="btn btn-primary" id="npc-defeated-btn" data-toggle="modal" data-target="travel-modal" data-dismiss="modal">X</button>
+  //     </div>
+  //   </div>
+  // </div>`
+  // let alertWin = document.getElementById('alert-window')
+  // alertWin.append(modal)
+}
+
+
+function playerDefeatedModal() {
+  let closeBtn = document.createElement('button')
+  closeBtn.className = 'btn btn-primary'
+  closeBtn.setAttribute('data-dismiss', 'modal')
+  closeBtn.textContent = 'X'
+  closeBtn.setAttribute('data-toggle', 'modal')
+  closeBtn.setAttribute('data-target', 'return-modal')
+  timeoutID = setTimeout(function () { closeBtn.addEventListener('click', () => showReturnModal()) }, 5000)
+
+  let modalFooter = document.createElement('div')
+  modalFooter.id = 'player-defeated-footer'
+  modalFooter.className = 'modal-footer'
+  modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(playerDefeatedAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody, modalFooter)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'player-defeated-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function quitModal() {
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(quitAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'quit-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.append(modalDialog)
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
+}
+
+function returnModal() {
+  let modal = document.createElement('div')
+  modal.className = 'modal custom fade'
+  modal.id = 'return-modal'
+  modal.setAttribute('tabindex', '-1')
+  modal.innerHTML = `<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${returnAlert}</p>
+      </div>
+    </div>
+  </div>`
+
+
+  let alertWin = document.getElementById('alert-window')
+  alertWin.append(modal)
 }
