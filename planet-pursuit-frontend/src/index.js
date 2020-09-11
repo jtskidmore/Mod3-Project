@@ -12,18 +12,40 @@ const home = document.getElementById("home")
 const game = document.getElementById("game")
 
 const lastGameStats = document.getElementById('previous-game-stats')
-lastGameStatsTitle = document.createElement('div')
+const lastGameStatsTitle = document.createElement('div')
 lastGameStatsTitle.classList = 'card-body'
 lastGameStatsTitle.id = 'lastGameStats-title'
 const lastGameStatsList = document.createElement('ul')
 lastGameStatsList.classList = "list-group list-group-flush"
 
+
+
+
+const newPlayerData = document.createElement('div')
+newPlayerData.classList = "card"
+newPlayerData.id = "new-player-data"
+
+const newPlayerDataTitle = document.createElement('div')
+newPlayerDataTitle.classList = "card-body"
+newPlayerDataTitle.id = 'newPlayerData-title'
+
+const newPlayerDataList = document.createElement('ul')
+newPlayerDataList.classList = "list-group list-group-flush"
+
+
+
+
+
 const form = document.createElement('form')
 form.id = "player-form"
 
+const visitBtnDiv = document.createElement('div')
+visitBtnDiv.id = "visit-btn-div"
 const visitBtn = document.createElement('button')
+visitBtn.classList = "btn btn-primary"
 visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
+visitBtnDiv.append(visitBtn)
 
 const leaderboard = document.getElementById("leaderboard")
 const leaderboardTitle = document.createElement("div")
@@ -101,7 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
           renderPlayer(data)
         })
 
-      form.reset()
+      form.style.display = 'none'
+      leaderboard.style.display = 'none'
+      lastGameStats.style.display = 'none'
       console.log(_current_player)
     })
   })
@@ -242,7 +266,7 @@ Promise.all([promise]).then(data => {
     console.log(data[0])
     _players.push(data[0])
     _current_player = data[0]
-    home.append(visitBtn)
+    home.append(visitBtnDiv)
     visitBtn.addEventListener("click", () => renderPlanet(_current_player))
 })
 //////////////////////////////////////////////////
@@ -274,8 +298,7 @@ function renderPlayer(player) {
   let container = document.createElement('div')
   container.classList = "container"
 
-  let homePlayerStats = document.createElement('ul')
-  homePlayerStats.innerHTML = `<h3>${player.name}</h3>`
+  newPlayerDataTitle.innerHTML = `<h3>${player.name}</h3>`
 
   let playerType = document.createElement("li")
   playerType.textContent = `Type: ${player.type}`
@@ -298,6 +321,7 @@ function renderPlayer(player) {
   _currentPotion = potion
   playerPotion.textContent = `Potion: ${potion.name}`
 
-  homePlayerStats.append(playerScore, playerHealth, playerAttack, playerWeapon, playerPotion)
-  home.append(homePlayerStats)
+  newPlayerDataList.append(playerScore, playerHealth, playerAttack, playerWeapon, playerPotion)
+  newPlayerData.append(newPlayerDataTitle, newPlayerDataList)
+  home.append(newPlayerData)
 }

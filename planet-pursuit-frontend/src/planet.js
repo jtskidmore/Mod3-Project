@@ -106,10 +106,17 @@ function exitGame() {
 
 function renderPlayerPlanet(playerplanet) {
 
+    let gameHeader = document.createElement('div')
+    gameHeader.id = "game-header"
+
+    let gameStatsContainer = document.createElement('div')
+    gameStatsContainer.id = "game-stats-container"
+
     let exit = document.getElementById('footer')
     exit.style.display = "block"
 
     let exitBtn = document.createElement('button')
+    exitBtn.id = "exit-btn"
     exitBtn.textContent = "Quit Game"
     exit.append(exitBtn)
 
@@ -121,6 +128,8 @@ function renderPlayerPlanet(playerplanet) {
     planetPlayer.textContent = player.name
 
     let planetPlanet = document.createElement("h5")
+    planetPlanet.id = 'planet-planet'
+
     let planet = _planets.filter((planet) => planet.id === playerplanet.planet_id)[0]
     planetPlanet.textContent = `Welcome to ${planet.name}, ${player.name}!`
 
@@ -128,6 +137,9 @@ function renderPlayerPlanet(playerplanet) {
     body.style.backgroundImage = `url(images/planets/${planet.name}.jpg)`
 
     let planetNpc = document.createElement("h5")
+    planetNpc.id = 'planet-npc'
+    gameHeader.append(planetPlanet, planetNpc)
+
     _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
     let npc = _currentNpc
     _npcHealth = npc.health
@@ -136,9 +148,14 @@ function renderPlayerPlanet(playerplanet) {
     _npcWeapon = _weapons.filter(weapon => weapon.id === npc.weapon_id)[0]
     if (npc.is_friendly == true) {
 
+
+
         planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for a weapon or potion?`
+
         let playerStats = document.createElement('div')
+        playerStats.classList = "card"
         playerStats.id = 'player-stats'
+
         let statList = document.createElement('ul')
         statList.innerHTML = `<h3>${player.name}</h3>`
 
@@ -177,7 +194,7 @@ function renderPlayerPlanet(playerplanet) {
         npcStatList.append(npcPotion, npcWeapon)
         npcStats.append(npcStatList)
 
-        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        game.append(gameHeader)
         /////////////////////
 
         let tradeWeaponBtnYes = document.createElement('button')
@@ -191,15 +208,64 @@ function renderPlayerPlanet(playerplanet) {
         let tradeBtnNo = document.createElement('button')
         tradeBtnNo.id = 'trade-no'
         tradeBtnNo.textContent = 'No'
-        game.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
+
+        gameStatsContainer.append(playerStats, npcStats)
+
+        
+
+        let avatarContainer = document.createElement('div')
+        avatarContainer.id = "avatar-container"
+
+        let playerAvatar = document.createElement('div')
+        playerAvatar.id = "player-avatar"
+
+        let playerAvatarType = _types.filter((type) => type.id === _current_player.type_id)[0]
+    
+
+        let npcAvatar = document.createElement('div')
+        npcAvatar.id = "npc-avatar"
+
+        let npcFirstName 
+
+        if (_currentNpc.name.includes(" ")) {
+            npcFirstName = _currentNpc.name.split(' ')[0]
+            console.log(npcFirstName)
+        } else {
+            npcFirstName = _currentNpc.name
+            console.log(npcFirstName)
+        }
+
+        npcAvatar.innerHTML = `<img src='images/traders/${npcFirstName}.png'>`
+
+        playerAvatar.innerHTML = `<img src='images/types/${playerAvatarType.name}.png'>`
+
+
+        avatarContainer.append(playerAvatar, npcAvatar)
+
+        game.append(avatarContainer)
+
+        game.append(gameStatsContainer, tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
+
+        
+
         createTradeListeners()
     } else {
         planetNpc.textContent = `${npc.name} is here to fight you!`
 
+
+
+
         //player stats list
+        let playerStatsDiv = document.createElement("div")
+        playerStatsDiv.classList = "card"
+        playerStatsDiv.id = "player-stats-div"
+
+
+
 
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
+        playerStats.classList = "card"
         let statList = document.createElement('ul')
         statList.innerHTML = `<h3>${player.name}</h3>`
 
@@ -229,6 +295,7 @@ function renderPlayerPlanet(playerplanet) {
 
         //npc stat list
         let npcStats = document.createElement('div')
+        npcStats.classList = "card"
         npcStats.id = 'npc-stats'
 
         let npcStatList = document.createElement('ul')
@@ -245,27 +312,80 @@ function renderPlayerPlanet(playerplanet) {
         npcStatList.append(npcHealth, npcWeapon)
         npcStats.append(npcStatList)
 
-        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        gameStatsContainer.append(playerStats, npcStats)
+
+        
+
+        let buttonsContainer = document.createElement("div")
+        buttonsContainer.id = "buttons-container"
+        
 
         //option buttons
         if (player.potion_id != 3) {
             let takePotion = document.createElement('button')
             takePotion.id = 'take-potion'
+            takePotion.classList = "btn btn-primary"
             takePotion.textContent = 'Take Potion'
-            game.append(takePotion)
+            buttonsContainer.append(takePotion)
         }
         if (player.score >= 100) {
             let runBtn = document.createElement('button')
             runBtn.id = 'run-btn'
+            runBtn.classList = "btn btn-primary"
             runBtn.textContent = 'Run (-100 pts)'
-            game.append(runBtn)
+            buttonsContainer.append(runBtn)
         }
 
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
+        attackBtn.classList = "btn btn-primary"
         attackBtn.textContent = 'Attack'
 
-        game.append(attackBtn)
+        buttonsContainer.append(attackBtn)
+
+        
+
+        /////////////////////////////////////////////////
+        /////////////////////////////////////////////////
+        /////////////////////////////////////////////////
+
+
+        let avatarContainer = document.createElement('div')
+        avatarContainer.id = "avatar-container"
+
+        let playerAvatar = document.createElement('div')
+        playerAvatar.id = "player-avatar"
+
+        let playerAvatarType = _types.filter((type) => type.id === _current_player.type_id)[0]
+    
+
+        let npcAvatar = document.createElement('div')
+        npcAvatar.id = "npc-avatar"
+
+        let npcFirstName 
+
+        if (_currentNpc.name.includes(" ")) {
+            npcFirstName = _currentNpc.name.split(' ')
+            let npcImageName = npcFirstName.join('')
+            npcFirstName = npcImageName
+            console.log(npcImageName)
+        } else {
+            npcFirstName = _currentNpc.name
+            console.log(npcFirstName)
+        }
+
+        npcAvatar.innerHTML = `<img src='images/villians/${npcFirstName}.png'>`
+
+        playerAvatar.innerHTML = `<img src='images/types/${playerAvatarType.name}.png'>`
+
+
+        avatarContainer.append(playerAvatar, npcAvatar)
+
+        game.append(planetPlanet, planetNpc, avatarContainer, gameStatsContainer, buttonsContainer)
+
+        /////////////////////////////////////////////////
+        /////////////////////////////////////////////////
+        /////////////////////////////////////////////////
 
         createFightListeners()
 

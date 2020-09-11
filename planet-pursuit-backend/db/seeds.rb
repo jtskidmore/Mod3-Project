@@ -53,24 +53,21 @@ greedo = Npc.create(name:"Greedo", health:100, attack:25, defense:200, is_friend
 
 storm_trooper = Npc.create(name:"Storm Trooper", health:70, attack:20, defense:140, is_friendly:false, weapon_id:3, potion_id:1, type_id:1)
 storm_trooper2 = Npc.create(name:"Storm Trooper", health:70, attack:20, defense:140, is_friendly:false, weapon_id:4, potion_id:1, type_id:1)
-storm_trooper3 = Npc.create(name:"Storm Trooper", health:70, attack:20, defense:140, is_friendly:false, weapon_id:4, potion_id:1, type_id:1)
-storm_trooper4 = Npc.create(name:"Storm Trooper", health:70, attack:20, defense:140, is_friendly:false, weapon_id:3, potion_id:1, type_id:1)
-storm_trooper5 = Npc.create(name:"Storm Trooper", health:70, attack:25, defense:140, is_friendly:false, weapon_id:4, potion_id:1, type_id:1)
-storm_trooper6 = Npc.create(name:"Storm Trooper", health:70, attack:25, defense:140, is_friendly:false, weapon_id:4, potion_id:1, type_id:1)
+
 tusken_raider = Npc.create(name:"Tusken Raider", health:70, attack:20, defense:140, is_friendly:false, weapon_id:8, potion_id:1, type_id:1)
 tusken_raider2 = Npc.create(name:"Tusken Raider", health:70, attack:20, defense:140, is_friendly:false, weapon_id:7, potion_id:1, type_id:1)
-tusken_raider3 = Npc.create(name:"Tusken Raider", health:70, attack:20, defense:140, is_friendly:false, weapon_id:8, potion_id:1, type_id:1)
-tusken_raider4 = Npc.create(name:"Tusken Raider", health:70, attack:20, defense:140, is_friendly:false, weapon_id:7, potion_id:1, type_id:1)
-tusken_raider5 = Npc.create(name:"Tusken Raider", health:70, attack:25, defense:140, is_friendly:false, weapon_id:8, potion_id:1, type_id:1)
-tusken_raider6 = Npc.create(name:"Tusken Raider", health:70, attack:25, defense:140, is_friendly:false, weapon_id:8, potion_id:1, type_id:1)
+
+
 
 lando = Npc.create(name:"Lando Calrissian", health:100, attack:0, defense:0, is_friendly:true, weapon_id:3, potion_id:2, type_id:1)
 yoda = Npc.create(name:"Yoda", health:100, attack:0, defense:0, is_friendly:true, weapon_id:1, potion_id:1, type_id:1)
 obi_wan = Npc.create(name:"Obi-Wan Kenobi", health:100, attack:0, defense:0, is_friendly:true, weapon_id:1, potion_id:1, type_id:1)
 watto = Npc.create(name:"Watto", health:100, attack:0, defense:0, is_friendly:true, weapon_id:5, potion_id:2, type_id:1)
+trader = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:6, potion_id:1, type_id:1)
 trader2 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:6, potion_id:1, type_id:1)
 trader3 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:7, potion_id:2, type_id:1)
 trader4 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:8, potion_id:2, type_id:1)
+trader5 = Npc.create(name:"A trader", health:100, attack:0, defense:0, is_friendly:true, weapon_id:8, potion_id:2, type_id:1)
 
 p1 = Player.create(name: "Player 1", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
 p2 = Player.create(name: "Player 2", health: 100, defense: 50, attack: 75, score: 0, type_id: 1, weapon_id: 1, potion_id: 1)
