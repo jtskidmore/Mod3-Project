@@ -119,3 +119,19 @@ body {
     align-items: center;
     width: 90%;
 }
+
+.modal .modal-content {
+  background: rgb(70, 70, 172);
+  opacity: 70%;
+}
+
+.modal .modal-body {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: bold;
+  color: rgb(224, 224, 224);
+}
+
+.modal .btn.btn-primary {
+  background: rgb(70, 70, 172);
+  border-color: rgb(70, 70, 172);
+}

@@ -1,16 +1,35 @@
 let timeoutID;
 const y = ''
-let playerDamagePointDifference
-let npcDamagePointDifference;
 
+/////////custom alert//////////
+function customAlert(text, callback, callbackParam, delay) {
+    let alertDiv = document.createElement('div')
+    alertDiv.className = 'alert alert-primary alert-dismissible fade show'
+    alertDiv.setAttribute('role', 'alert')
+    let alertWin = document.getElementById('alert-window')
+    alertDiv.innerHTML = `<p>${text}</p><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>`
+    console.log(alertDiv.innerHTML)
+    alertWin.append(alertDiv)
+    timeoutID = setTimeout(function () { callback(callbackParam) }, delay)
+    timeoutID = setTimeout(function () { $('.alert').alert('close') }, 2000)
+}
+///////////reload function///////////////////
 function reload() {
+    // console.log('reload')
     document.location.reload(true)
 }
-
+///////////this does nothing but we need a placeholder function//////////////////
+function x(y) {
+    console.log(y)
+}
+///////////////////////////
 function renderPlanet(player) {
+    console.log(player)
     home.style.display = "none"
     leaderboard.style.display = "none"
-    $('.modal').modal('hide');
+    // div.style.display = "none"
     game.innerHTML = ''
     let playerId = player.id
     let planetId = _planets[Math.floor(Math.random() * _planets.length)].id
@@ -49,27 +68,23 @@ function exitGame() {
     fetch(`${PLAYERS_URL}/${_current_player.id}`, options)
         .then(res => {
             if (res.ok) {
+                quitAlert = `Quitting and returning to base...`
+                customAlert(quitAlert, reload, y, 2000)
                 return Promise.resolve('Player deleted.');
             } else {
                 return Promise.reject('An error occurred.');
             }
         })
         .then(res => console.log(res));
-        quitModal()
-        $("#flee-modal").modal('show');
-        timeoutID = setTimeout(function () { reload() }, 2000)
 }
 
 function renderPlayerPlanet(playerplanet) {
 
     let exit = document.getElementById('footer')
     exit.style.display = "block"
-    exit.innerHTML = ''
 
     let exitBtn = document.createElement('button')
     exitBtn.textContent = "Quit Game"
-    exitBtn.setAttribute('data-toggle', 'modal')
-    exitBtn.setAttribute('data-target', '#quit-modal')
     exit.append(exitBtn)
 
     exitBtn.addEventListener('click', () => exitGame())
@@ -137,28 +152,25 @@ function renderPlayerPlanet(playerplanet) {
         npcStats.append(npcStatList)
 
         game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        /////////////////////
 
         let tradeWeaponBtnYes = document.createElement('button')
         tradeWeaponBtnYes.id = 'trade-weapon-yes'
-        tradeWeaponBtnYes.setAttribute('data-toggle', 'modal')
-        tradeWeaponBtnYes.setAttribute('data-target', '#trade-weapon-modal')
         tradeWeaponBtnYes.textContent = 'Trade Weapon'
 
         let tradePotionBtnYes = document.createElement('button')
         tradePotionBtnYes.id = 'trade-potion-yes'
-        tradePotionBtnYes.setAttribute('data-toggle', 'modal')
-        tradePotionBtnYes.setAttribute('data-target', '#trade-potion-modal')
         tradePotionBtnYes.textContent = 'Trade/Accept Potion'
 
         let tradeBtnNo = document.createElement('button')
         tradeBtnNo.id = 'trade-no'
         tradeBtnNo.textContent = 'No'
-        tradeBtnNo.setAttribute('data-toggle', 'modal')
-        tradeBtnNo.setAttribute('data-target', '#deny-trade-modal')
         game.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
         createTradeListeners()
     } else {
         planetNpc.textContent = `${npc.name} is here to fight you!`
+
+        //player stats list
 
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
@@ -189,6 +201,7 @@ function renderPlayerPlanet(playerplanet) {
         statList.append(playerScore, playerHealth, playerAttack, playerDefense, playerWeapon, playerPotion)
         playerStats.append(statList)
 
+        //npc stat list
         let npcStats = document.createElement('div')
         npcStats.id = 'npc-stats'
 
@@ -208,42 +221,37 @@ function renderPlayerPlanet(playerplanet) {
 
         game.append(planetPlanet, planetNpc, playerStats, npcStats)
 
+        //option buttons
         if (player.potion_id != 3) {
             let takePotion = document.createElement('button')
             takePotion.id = 'take-potion'
-            takePotion.setAttribute('data-toggle', 'modal')
-            takePotion.setAttribute('data-target', '#consume-potion-modal')
             takePotion.textContent = 'Take Potion'
             game.append(takePotion)
         }
         if (player.score >= 100) {
             let runBtn = document.createElement('button')
             runBtn.id = 'run-btn'
-            runBtn.setAttribute('data-toggle', 'modal')
-            runBtn.setAttribute('data-target', '#flee-modal')
             runBtn.textContent = 'Run (-100 pts)'
             game.append(runBtn)
         }
 
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
-        attackBtn.setAttribute('data-toggle', 'modal')
-        attackBtn.setAttribute('data-target', '#player-attack-modal')
         attackBtn.textContent = 'Attack'
 
         game.append(attackBtn)
 
         createFightListeners()
+
     }
+
 }
 
 function createTradeListeners() {
     let tradeWeaponYesBtn = document.getElementById('trade-weapon-yes')
     tradeWeaponYesBtn.addEventListener('click', () => acceptTradeWeapon())
-
     let tradePotionYesBtn = document.getElementById('trade-potion-yes')
     tradePotionYesBtn.addEventListener('click', () => acceptTradePotion())
-
     let tradeNoBtn = document.getElementById('trade-no')
     tradeNoBtn.addEventListener('click', () => denyTrade())
 
@@ -253,6 +261,7 @@ function acceptTradePotion() {
     let npc = _npcs.filter((npc) => npc.id === _currentPlanet.npc_id)[0]
     let npcPotion = npc.potion_id
     let player = {
+        // id: _current_player.id,
         potion_id: npcPotion
     }
     fetch(`${PLAYERS_URL}/${_current_player.id}`, {
@@ -266,19 +275,17 @@ function acceptTradePotion() {
         .then((player) => {
             _currentPotion = _potions.filter((potion) => potion.id === player.potion_id)[0]
         })
-    tradePotionAlert.textContent = `Your potion is now a ${_potions.filter((potion) => potion.id === npc.potion_id)[0].name} potion!`
-    tradePotionModal()
-}
-function showTravelModal() {
-    travelModal()
-    $("#travel-modal").modal('show');
-    timeoutID = setTimeout(function () { renderPlanet(_current_player) }, 2000)
+    let potionAlert = `Your potion is now a ${_potions.filter((potion) => potion.id === npc.potion_id)[0].name} potion!`
+    customAlert(potionAlert, x, y, 1000)
+    let travelAlert = 'Traveling to new planet...'
+    timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 2000)
 }
 
 function acceptTradeWeapon() {
     let npc = _npcs.filter((npc) => npc.id === _currentPlanet.npc_id)[0]
     let npcWeapon = npc.weapon_id
     let player = {
+        // id: _current_player.id,
         weapon_id: npcWeapon
     }
     fetch(`${PLAYERS_URL}/${_current_player.id}`, {
@@ -292,14 +299,15 @@ function acceptTradeWeapon() {
         .then((player) => {
             _currentWeapon = _weapons.filter((weapon) => weapon.id === player.weapon_id)[0]
         })
-    tradeWeaponAlert.textContent = `Your weapon is now a ${_weapons.filter((weapon) => weapon.id === npc.weapon_id)[0].name}!`
-    tradeWeaponModal()
+    let weaponAlert = `Your weapon is now a ${_weapons.filter((weapon) => weapon.id === npc.weapon_id)[0].name}!`
+    customAlert(weaponAlert, x, y, 1000)
+    let travelAlert = 'Traveling to new planet...'
+    timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 2000)
 }
 
 function denyTrade() {
-    denyTradeAlert.textContent = `You have chosen not to trade`
-    denyTradeModal()
-    timeoutID = setTimeout(function () { renderPlanet(_current_player) }, 2000)
+    let travelAlert = 'Traveling to new planet...'
+    timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 2000)
 }
 
 function createFightListeners() {
@@ -315,6 +323,7 @@ function createFightListeners() {
 
     let attackFightBtn = document.getElementById('attack-btn')
     attackFightBtn.addEventListener('click', () => attack())
+
 }
 
 function runFarAway() {
@@ -322,8 +331,8 @@ function runFarAway() {
     let player = {
         health: _currentHealth,
         score: _currentScore
+        // score: //var
     }
-
     let healthPromise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
         method: "PATCH",
         headers: {
@@ -335,28 +344,27 @@ function runFarAway() {
 
     Promise.all([healthPromise]).then(data => {
         _current_player = data[0]
-        fleeAlert.textContent = `Fleeing to new planet...`
-        fleeModal()
-        $("#flee-modal").modal('show');
-        timeoutID = setTimeout(function() {renderPlanet(_current_player)}, 2000) 
+        let fleeAlert = 'Fleeing to new planet...'
+        timeoutID = setTimeout(function () { customAlert(fleeAlert, renderPlanet, _current_player, 2000) }, 2000)
     })
 }
 
 function consumePotion() {
+    console.log("potion connected")
+    console.log(_currentHealth)
     let newHealth = _currentHealth + _currentPotion.health_points
+    console.log(newHealth)
     document.getElementById('take-potion').style.display = 'none'
     document.getElementById('player-potion').textContent = `Potion: none`
-
-    consumePotionAlert = "Your health has been increased!"
-    consumePotionModal()
-
+    let healthAlert = "Your health has been increased!"
+    customAlert(healthAlert, x, y, 1000)
     document.getElementById('player-health').textContent = `Health: ${newHealth}`
 
     let player = {
+        // id: _current_player.id,
         health: newHealth,
         potion_id: 3
     }
-
     fetch(`${PLAYERS_URL}/${_current_player.id}`, {
         method: "PATCH",
         headers: {
@@ -368,85 +376,38 @@ function consumePotion() {
         .then((player) => {
             _currentPotion = _potions.filter((potion) => potion.id === player.potion_id)[0]
         })
+
 }
 
 function attack() {
     _playerAttack = _current_player.attack
-
     let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
-    playerDamagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
-    _playerAttack = _playerAttack + playerDamagePointDifference
-
+    let damagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
+    _playerAttack = _playerAttack + damagePointDifference
     _npcHealth = _npcHealth - _playerAttack
 
-    playerAttackSequence(playerDamagePointDifference)
-}
+    if (damagePointDifference > 0) {
+        let vEffectiveAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`
+        customAlert(vEffectiveAlert, x, y, 1000)
+    } else if (damagePointDifference == 0) {
+        let effectiveAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        customAlert(effectiveAlert, x, y, 1000)
+    } else if (damagePointDifference < 0) {
+        let weakEffectiveAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        customAlert(weakEffectiveAlert, x, y, 1000) }
 
-function enemyAttack() {
-    npcPrepAlert = `${_currentNpc.name} is preparing their attack...`
-    console.log('enemy attack connected')
-    _npcAttack = _currentNpc.attack
-    let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
-    npcDamagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
-    // console.log(npcDamagePointDifference)
-    _npcAttack = _npcAttack + npcDamagePointDifference
-    // console.log(_npcAttack)
-    _currentHealth = _currentHealth - _npcAttack
-    // console.log(_currentHealth)
-    npcPrepAlert = `${_currentNpc.name} is preparing their attack...`
-    console.log(npcPrepAlert)
-    npcPrepModal()
-    $("#npc-prep-modal").modal('show');
-
-    npcAttackSequence(npcDamagePointDifference)
-    
-    if (_currentHealth <= 0) {
-        _players.push(_current_player)
-        playerDefeatedAlert = `${_currentNpc.name} has defeated you!`
-        playerDefeatedModal()
-        console.log(playerDefeatedAlert)//////////////////////////////////////////////////????////////////////////////////////////
-        timeoutID = setTimeout(function () { $("#player-defeated-modal").modal('show') }, 4000)
-
-    } else {
-        document.getElementById('player-health').textContent = `Health: ${_currentHealth}`
-    }
-}
-
-function showReturnModal() {
-    returnModal()
-    $("#return-modal").modal('show');
-    timeoutID = setTimeout(function () { document.location.reload() }, 2000)
-}
-
-function playerAttackSequence(playerDamagePointDifference) {
-    if (playerDamagePointDifference > 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`
-        playerAttackModal()
-        console.log(playerAttackAlert)
-    } else if (playerDamagePointDifference == 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
-        playerAttackModal()
-    } else if (playerDamagePointDifference < 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
-        playerAttackModal()
-    }
     if (_npcHealth <= 0) {
+        //var = player score plus planet score
         _currentPlanet.point_value = _currentNpc.defense
         _currentScore = _currentScore + _currentPlanet.point_value
-        
-        npcDefeatedAlert = `You have defeated ${_currentNpc.name}!!!` 
-        npcDefeatedModal()
-        timeoutID = setTimeout(function () {
-            $("#npc-defeated-modal").modal('show')
-        }, 2000)
 
-        timeoutID = setTimeout(function () {document.getElementById('npc-defeated-btn').addEventListener('click', showTravelModal())}, 4000)
-
+        let defeatAlert = `You have defeated ${_currentNpc.name}!!!`
+        timeoutID = setTimeout(function() {customAlert(defeatAlert, x, y, 2000)}, 2000)
         let player = {
             health: _currentHealth,
             score: _currentScore
+            // score: //var
         }
-        
         let healthPromise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
             method: "PATCH",
             headers: {
@@ -458,29 +419,60 @@ function playerAttackSequence(playerDamagePointDifference) {
 
         Promise.all([healthPromise]).then(data => {
             _current_player = data[0]
+            let travelAlert = 'Traveling to new planet...'
+            timeoutID = setTimeout(function () { customAlert(travelAlert, renderPlanet, _current_player, 2000) }, 3000)
         })
+        // renderPlanet(_current_player)
+
     } else {
         document.getElementById('npc-health').textContent = `Health: ${_npcHealth}`
-        
-        timeoutID = setTimeout(function () { enemyAttack() }, 1500)
+        timeoutID = setTimeout(function() {enemyAttack()}, 1500)
+    }
+
+}
+
+function enemyAttack() {
+    _npcAttack = _currentNpc.attack
+    let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
+    let damagePointDifference = damagePoints[Math.floor(Math.random() * damagePoints.length)]
+    console.log(damagePointDifference)
+    _npcAttack = _npcAttack + damagePointDifference
+    console.log(_npcAttack)
+    _currentHealth = _currentHealth - _npcAttack
+    console.log(_currentHealth)
+    let prepareAlert = `${_currentNpc.name} is preparing their attack...`
+    timeoutID = setTimeout(function() {customAlert(prepareAlert, x, y, 1000)}, 1000)
+    if (damagePointDifference > 0) {
+        let npcVeryEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`
+        customAlert(npcVeryEffectiveAlert, x, y, 2000)
+    } else if (damagePointDifference == 0) {
+        let npcEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`
+        customAlert(npcEffectiveAlert, x, y, 2000)
+    } else if (damagePointDifference < 0) {
+        let npcWeakEffectiveAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`
+        customAlert(npcWeakEffectiveAlert, x, y, 2000)
+    }
+    if (_currentHealth <= 0) {
+        _players.push(_current_player)
+        let defeatAlert = `${_currentNpc.name} has defeated you!`
+        timeoutID = setTimeout(function() {customAlert(defeatAlert, x, y, 2000)}, 2000)
+        let returnAlert = `Returning to base...`
+        timeoutID = setTimeout(function() {customAlert(returnAlert, x, y, 2000)}, 2000)
+        // renderLeaderboard()
+        //grab player score and add it to leaderboard
+
+        // game.style.display = 'none'
+        // home.innerHTML = ""
+        // home.append(form)
+        // home.style.display = 'block'
+        // leaderboard.style.display = "block"
+    } else {
+        document.getElementById('player-health').textContent = `Health: ${_currentHealth}`
     }
 }
 
-function npcAttackSequence(npcDamagePointDifference) {
-    if (npcDamagePointDifference > 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`
-        npcAttackModal()
-        console.log(npcAttackAlert)
-        timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500) 
-    } else if (npcDamagePointDifference == 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`
-        npcAttackModal()
-        console.log(npcAttackAlert)
-        timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
-    } else if (npcDamagePointDifference < 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`
-        npcAttackModal()
-        console.log(npcAttackAlert)
-        timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
-    }
-}
+travel to new planet needs to be longer
+
+
+exitBtn.setAttribute('data-toggle', 'modal')
+exitBtn.setAttribute('data-target', '#test-modal')
