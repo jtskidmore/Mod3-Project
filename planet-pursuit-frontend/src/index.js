@@ -117,6 +117,9 @@ document.addEventListener("DOMContentLoaded", function () {
         })
 
       form.reset()
+      form.style.display = 'none'
+      leaderboard.style.display = 'none'
+      lastGameStats.style.display = 'none'
       console.log(_current_player)
     })
   })
@@ -223,25 +226,6 @@ function setPlayerAttributes() {
     health: _currentHealth
   }
 
-  /////////////////OLD FETCH////////////////////
-
-  // let configObj = {
-  //   method: "PATCH",
-  //   headers: {
-  //     "Accept": "application/json",
-  //     "content-type": "application/json"
-  //   },
-  //   body: JSON.stringify(data)
-  // }
-  //
-  // fetch(`${PLAYERS_URL}/${_current_player.id}`, configObj)
-  //   .then(res => res.json())
-  //   .then((data) => {
-  //     console.log(data)
-  //     _players.push(data)
-  //     _current_player = data
-  //   })
-/////////////////////////////////////////////////
 
 //////////////NEW FETCH///////////////////////////
 let promise = fetch(`${PLAYERS_URL}/${_current_player.id}`, {
@@ -289,8 +273,7 @@ function renderPlayer(player) {
   let container = document.createElement('div')
   container.classList = "container"
 
-  let homePlayerStats = document.createElement('ul')
-  homePlayerStats.innerHTML = `<h3>${player.name}</h3>`
+  newPlayerDataTitle.innerHTML = `<h3>${player.name}</h3>`
 
   let playerType = document.createElement("li")
   playerType.textContent = `Type: ${player.type}`
@@ -313,6 +296,7 @@ function renderPlayer(player) {
   _currentPotion = potion
   playerPotion.textContent = `Potion: ${potion.name}`
 
-  homePlayerStats.append(playerScore, playerHealth, playerAttack, playerWeapon, playerPotion)
-  home.append(homePlayerStats)
+  newPlayerDataList.append(playerScore, playerHealth, playerAttack, playerWeapon, playerPotion)
+  newPlayerData.append(newPlayerDataTitle, newPlayerDataList)
+  home.append(newPlayerData)
 }
