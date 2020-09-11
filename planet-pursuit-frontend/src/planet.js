@@ -86,6 +86,8 @@ function renderPlayerPlanet(playerplanet) {
     planetPlayer.textContent = player.name
 
     let planetPlanet = document.createElement("h5")
+    planetPlanet.id = 'planet-planet'
+
     let planet = _planets.filter((planet) => planet.id === playerplanet.planet_id)[0]
     planetPlanet.textContent = `Welcome to ${planet.name}, ${player.name}!`
 
@@ -93,6 +95,11 @@ function renderPlayerPlanet(playerplanet) {
     body.style.backgroundImage = `url(images/planets/${planet.name}.jpg)`
 
     let planetNpc = document.createElement("h5")
+    _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
+    gameHeader.append(planetPlanet, planetNpc)
+
+    _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
+
     _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
     let npc = _currentNpc
     _npcHealth = npc.health
@@ -104,6 +111,7 @@ function renderPlayerPlanet(playerplanet) {
         planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for a weapon or potion?`
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
+
         let statList = document.createElement('ul')
         statList.innerHTML = `<h3>${player.name}</h3>`
 
@@ -161,13 +169,62 @@ function renderPlayerPlanet(playerplanet) {
         tradeBtnNo.textContent = 'No'
         tradeBtnNo.setAttribute('data-toggle', 'modal')
         tradeBtnNo.setAttribute('data-target', '#deny-trade-modal')
-        game.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
+
+        .append(playerStats, npcStats)
+
+        gameStatsContainer
+
+        let avatarContainer = document.createElement('div')
+        avatarContainer.id = "avatar-container"
+
+        let playerAvatar = document.createElement('div')
+        playerAvatar.id = "player-avatar"
+
+        let playerAvatarType = _types.filter((type) => type.id === _current_player.type_id)[0]
+    
+
+        let npcAvatar = document.createElement('div')
+        npcAvatar.id = "npc-avatar"
+
+        let npcFirstName 
+
+        if (_currentNpc.name.includes(" ")) {
+            npcFirstName = _currentNpc.name.split(' ')[0]
+            console.log(npcFirstName)
+        } else {
+            npcFirstName = _currentNpc.name
+            console.log(npcFirstName)
+        }
+
+        npcAvatar.innerHTML = `<img src='images/traders/${npcFirstName}.png'>`
+
+        playerAvatar.innerHTML = `<img src='images/types/${playerAvatarType.name}.png'>`
+
+
+        avatarContainer.append(playerAvatar, npcAvatar)
+
+        game.append(avatarContainer)
+
+
+
+        game.append(gameStatsContainer, tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
+
+
         createTradeListeners()
     } else {
         planetNpc.textContent = `${npc.name} is here to fight you!`
 
+        //player stats list
+        let playerStatsDiv = document.createElement("div")
+        playerStatsDiv.classList = "card"
+        playerStatsDiv.id = "player-stats-div"
+
+
+
+
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
+        playerStats.classList = "card"
         let statList = document.createElement('ul')
         statList.innerHTML = `<h3>${player.name}</h3>`
 
@@ -195,7 +252,9 @@ function renderPlayerPlanet(playerplanet) {
         statList.append(playerScore, playerHealth, playerAttack, playerDefense, playerWeapon, playerPotion)
         playerStats.append(statList)
 
+        //npc stat list
         let npcStats = document.createElement('div')
+        npcStats.classList = "card"
         npcStats.id = 'npc-stats'
 
         let npcStatList = document.createElement('ul')
@@ -212,23 +271,28 @@ function renderPlayerPlanet(playerplanet) {
         npcStatList.append(npcHealth, npcWeapon)
         npcStats.append(npcStatList)
 
-        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        gameStatsContainer.append(playerStats, npcStats)
+
+        let buttonsContainer = document.createElement("div")
+        buttonsContainer.id = "buttons-container"
 
         if (player.potion_id != 3) {
             let takePotion = document.createElement('button')
             takePotion.id = 'take-potion'
             takePotion.setAttribute('data-toggle', 'modal')
             takePotion.setAttribute('data-target', '#consume-potion-modal')
+            takePotion.classList = "btn btn-primary" //possible conflict//
             takePotion.textContent = 'Take Potion'
-            game.append(takePotion)
+            buttonsContainer.append(takePotion)
         }
         if (player.score >= 100) {
             let runBtn = document.createElement('button')
             runBtn.id = 'run-btn'
+            runBtn.classList = "btn btn-primary" //possible conflict//
             runBtn.setAttribute('data-toggle', 'modal')
             runBtn.setAttribute('data-target', '#flee-modal')
             runBtn.textContent = 'Run (-100 pts)'
-            game.append(runBtn)
+            buttonsContainer.append(runBtn)
         }
 
         let attackBtn = document.createElement('button')
