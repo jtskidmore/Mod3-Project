@@ -6,13 +6,24 @@ function reload() {
     document.location.reload(true)
 }
 
+function makeNewPlanet(_currentPlanet, planetId) {
+    if (_currentPlanet.planet_id == planetId) {
+        planetId = _planets[Math.floor(Math.random() * _planets.length)].id
+    } 
+}
+
 function renderPlanet(player) {
     home.style.display = "none"
     leaderboard.style.display = "none"
     $('.modal').modal('hide');
     game.innerHTML = ''
+
     let playerId = player.id
     let planetId = _planets[Math.floor(Math.random() * _planets.length)].id
+    if (_currentPlanet != undefined) {
+        makeNewPlanet(_currentPlanet, planetId)
+    }
+    
     let npcId = _npcs[Math.floor(Math.random() * _npcs.length)].id
 
     let data = {
@@ -485,6 +496,8 @@ function consumePotion() {
 
     consumePotionAlert = "Your health has been increased!"
     consumePotionModal()
+    timeoutID = setTimeout(function () { $("#consume-potion-modal").modal('hide'); }, 1500)
+
 
     document.getElementById('player-health').textContent = `Health: ${newHealth}`
 
@@ -528,16 +541,18 @@ function enemyAttack() {
     // console.log(_npcAttack)
     _currentHealth = _currentHealth - _npcAttack
     // console.log(_currentHealth)
-    npcPrepAlert = `${_currentNpc.name} is preparing their attack...`
+    npcPrepAlert = `The enemy is preparing their attack...`
     console.log(npcPrepAlert)
     npcPrepModal()
+    // timeoutID = setTimeout(function () { $("#npc-prep-modal").modal('show'); }, 3000)
     $("#npc-prep-modal").modal('show');
+    timeoutID = setTimeout(function () { $("#npc-prep-modal").modal('hide') }, 1500)
 
     npcAttackSequence(_currentNpc, npcDamagePointDifference)
     
     if (_currentHealth <= 0) {
         _players.push(_current_player)
-        playerDefeatedAlert = `${_currentNpc.name} has defeated you!`
+        playerDefeatedAlert = `You have been defeated.`
         playerDefeatedModal()
         console.log(playerDefeatedAlert)//////////////////////////////////////////////////????////////////////////////////////////
         timeoutID = setTimeout(function () { $("#player-defeated-modal").modal('show') }, 4000)
@@ -555,27 +570,31 @@ function showReturnModal() {
 
 function playerAttackSequence(playerDamagePointDifference) {
     if (playerDamagePointDifference > 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage to ${_currentNpc.name}!`
+        playerAttackAlert = `Your ${_currentWeapon.name} was very effective and did ${_playerAttack} points worth of damage!`
         playerAttackModal()
+        timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
         console.log(playerAttackAlert)
     } else if (playerDamagePointDifference == 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        playerAttackAlert = `Your ${_currentWeapon.name} did ${_playerAttack} points worth of damage.`
         playerAttackModal()
+        timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
     } else if (playerDamagePointDifference < 0) {
-        playerAttackAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage to ${_currentNpc.name}.`
+        playerAttackAlert = `Your ${_currentWeapon.name} was not very effective and only did ${_playerAttack} points worth of damage.`
         playerAttackModal()
+        timeoutID = setTimeout(function () { $("#player-attack-modal").modal('hide') }, 2000)
     }
     if (_npcHealth <= 0) {
         _currentPlanet.point_value = _currentNpc.defense
         _currentScore = _currentScore + _currentPlanet.point_value
         
-        npcDefeatedAlert = `You have defeated ${_currentNpc.name}!!!` 
+        npcDefeatedAlert = `You have defeated the enemy!!!` 
         npcDefeatedModal()
         timeoutID = setTimeout(function () {
             $("#npc-defeated-modal").modal('show')
-        }, 2000)
+        }, 4000)
+        // timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide'); }, 2500)
 
-        timeoutID = setTimeout(function () {document.getElementById('npc-defeated-btn').addEventListener('click', showTravelModal())}, 4000)
+        // timeoutID = setTimeout(function () {document.getElementById('npc-defeated-btn').addEventListener('click', showTravelModal())}, 5000)
 
         let player = {
             health: _currentHealth,
@@ -597,25 +616,28 @@ function playerAttackSequence(playerDamagePointDifference) {
     } else {
         document.getElementById('npc-health').textContent = `Health: ${_npcHealth}`
         
-        timeoutID = setTimeout(function () { enemyAttack() }, 1500)
+        timeoutID = setTimeout(function () { enemyAttack() }, 2500)
     }
 }
 
 function npcAttackSequence(_currentNpc, npcDamagePointDifference) {
     if (npcDamagePointDifference > 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`
+        npcAttackAlert = `The enemy's attack was very effective!!!`
         npcAttackModal()
         console.log(npcAttackAlert)
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500) 
+        timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide'); }, 4500)
     } else if (npcDamagePointDifference == 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} did ${_npcAttack} points worth of damage to you!`
+        npcAttackAlert = `The enemy's attack was moderately effective!`
         npcAttackModal()
         console.log(npcAttackAlert)
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
+        timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide');}, 4500)
     } else if (npcDamagePointDifference < 0) {
-        npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was not very effective and only did ${_npcAttack} points worth of damage to you.`
+        npcAttackAlert = `The enemy's attack was not very effective.`
         npcAttackModal()
         console.log(npcAttackAlert)
         timeoutID = setTimeout(function() {$("#npc-attack-modal").modal('show');}, 2500)
+        timeoutID = setTimeout(function () { $("#npc-attack-modal").modal('hide'); }, 4500)
     }
 }

@@ -96,9 +96,6 @@ function denyTradeModal() {
       <div class="modal-body">
         <p>${denyTradeAlert}</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="deny-trade-btn" data-dismiss="modal">X</button>
-      </div>
     </div>
   </div>`
 
@@ -107,15 +104,6 @@ function denyTradeModal() {
 }
 
 function consumePotionModal() {
-  let closeBtn = document.createElement('button')
-  closeBtn.className = 'btn btn-primary'
-  closeBtn.setAttribute('data-dismiss', 'modal')
-  closeBtn.textContent = 'X'
-
-  let modalFooter = document.createElement('div')
-  modalFooter.className = 'modal-footer'
-  modalFooter.id = 'takepotionfooter'
-  modalFooter.append(closeBtn)
 
   let modalBody = document.createElement('div')
   modalBody.className = 'modal-body'
@@ -123,7 +111,7 @@ function consumePotionModal() {
 
   let modalContent = document.createElement('div')
   modalContent.className = 'modal-content'
-  modalContent.append(modalBody, modalFooter)
+  modalContent.append(modalBody)
 
   let modalDialog = document.createElement('div')
   modalDialog.className = 'modal-dialog'
@@ -152,9 +140,7 @@ function playerAttackModal() {
       <div class="modal-body">
         <p>${playerAttackAlert}</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">X</button>
-      </div>
+      
     </div>
   </div>`
 
@@ -173,9 +159,7 @@ function npcPrepModal() {
       <div class="modal-body">
         <p>${npcPrepAlert}</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">X</button>
-      </div>
+      
     </div>
   </div>`
 
@@ -186,15 +170,15 @@ function npcPrepModal() {
 function npcAttackModal() {
   console.log(_currentNpc)
 
-  let closeBtn = document.createElement('button')
-  closeBtn.className = 'btn btn-primary'
-  closeBtn.setAttribute('data-dismiss', 'modal')
-  closeBtn.textContent = 'X'
+  // let closeBtn = document.createElement('button')
+  // closeBtn.className = 'btn btn-primary'
+  // closeBtn.setAttribute('data-dismiss', 'modal')
+  // closeBtn.textContent = 'X'
 
-  let modalFooter = document.createElement('div')
-  modalFooter.id = 'npc-attack-footer'
-  modalFooter.className = 'modal-footer'
-  modalFooter.append(closeBtn)
+  // let modalFooter = document.createElement('div')
+  // modalFooter.id = 'npc-attack-footer'
+  // modalFooter.className = 'modal-footer'
+  // modalFooter.append(closeBtn)
 
   let modalBody = document.createElement('div')
   modalBody.className = 'modal-body'
@@ -202,7 +186,7 @@ function npcAttackModal() {
 
   let modalContent = document.createElement('div')
   modalContent.className = 'modal-content'
-  modalContent.append(modalBody, modalFooter)
+  modalContent.append(modalBody)
 
   let modalDialog = document.createElement('div')
   modalDialog.className = 'modal-dialog'
@@ -231,9 +215,6 @@ function travelModal() {
       <div class="modal-body">
         <p>${travelAlert}</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="travelmodalbtn" data-dismiss="modal"></button>
-      </div>
     </div>
   </div>`
 
@@ -242,15 +223,6 @@ function travelModal() {
 
 }
 function fleeModal() {
-  let closeBtn = document.createElement('button')
-  closeBtn.className = 'btn btn-primary'
-  closeBtn.setAttribute('data-dismiss', 'modal')
-  closeBtn.textContent = ''
-
-  let modalFooter = document.createElement('div')
-  modalFooter.id = 'fleemodalfoot'
-  modalFooter.className = 'modal-footer'
-  modalFooter.append(closeBtn)
 
   let modalBody = document.createElement('div')
   modalBody.className = 'modal-body'
@@ -258,7 +230,7 @@ function fleeModal() {
 
   let modalContent = document.createElement('div')
   modalContent.className = 'modal-content'
-  modalContent.append(modalBody, modalFooter)
+  modalContent.append(modalBody)
 
   let modalDialog = document.createElement('div')
   modalDialog.className = 'modal-dialog'
@@ -274,22 +246,54 @@ function fleeModal() {
   alertWin.append(modal)
 }
 function npcDefeatedModal() {
+  let closeBtn = document.createElement('button')
+  closeBtn.className = 'btn btn-primary'
+  closeBtn.setAttribute('data-dismiss', 'modal')
+  closeBtn.textContent = 'X'
+  closeBtn.setAttribute('data-toggle', 'modal')
+  closeBtn.setAttribute('data-target', 'travel-modal')
+  closeBtn.addEventListener('click', () => showTravelModal())
+
+  let modalFooter = document.createElement('div')
+  modalFooter.className = 'modal-footer'
+  modalFooter.append(closeBtn)
+
+  let modalBody = document.createElement('div')
+  modalBody.className = 'modal-body'
+  modalBody.append(npcDefeatedAlert)
+
+  let modalContent = document.createElement('div')
+  modalContent.className = 'modal-content'
+  modalContent.append(modalBody, modalFooter)
+
+  let modalDialog = document.createElement('div')
+  modalDialog.className = 'modal-dialog'
+  modalDialog.append(modalContent)
+
   let modal = document.createElement('div')
   modal.className = 'modal custom fade'
   modal.id = 'npc-defeated-modal'
   modal.setAttribute('tabindex', '-1')
-  modal.innerHTML = `<div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p>${npcDefeatedAlert}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="npc-defeated-btn" data-toggle="modal" data-target="travel-modal" data-dismiss="modal">X</button>
-      </div>
-    </div>
-  </div>`
+  modal.append(modalDialog)
+
   let alertWin = document.getElementById('alert-window')
   alertWin.append(modal)
+  // let modal = document.createElement('div')
+  // modal.className = 'modal custom fade'
+  // modal.id = 'npc-defeated-modal'
+  // modal.setAttribute('tabindex', '-1')
+  // modal.innerHTML = `<div class="modal-dialog">
+  //   <div class="modal-content">
+  //     <div class="modal-body">
+  //       <p>${npcDefeatedAlert}</p>
+  //     </div>
+  //     <div class="modal-footer">
+  //       <button type="button" class="btn btn-primary" id="npc-defeated-btn" data-toggle="modal" data-target="travel-modal" data-dismiss="modal">X</button>
+  //     </div>
+  //   </div>
+  // </div>`
+  // let alertWin = document.getElementById('alert-window')
+  // alertWin.append(modal)
 }
 
 
@@ -330,15 +334,6 @@ function playerDefeatedModal() {
 }
 
 function quitModal() {
-  let closeBtn = document.createElement('button')
-  closeBtn.className = 'btn btn-primary'
-  closeBtn.setAttribute('data-dismiss', 'modal')
-  closeBtn.textContent = ''
-
-  let modalFooter = document.createElement('div')
-  modalFooter.id = 'quitmodalfoot'
-  modalFooter.className = 'modal-footer'
-  modalFooter.append(closeBtn)
 
   let modalBody = document.createElement('div')
   modalBody.className = 'modal-body'
@@ -346,7 +341,7 @@ function quitModal() {
 
   let modalContent = document.createElement('div')
   modalContent.className = 'modal-content'
-  modalContent.append(modalBody, modalFooter)
+  modalContent.append(modalBody)
 
   let modalDialog = document.createElement('div')
   modalDialog.className = 'modal-dialog'
@@ -371,9 +366,6 @@ function returnModal() {
     <div class="modal-content">
       <div class="modal-body">
         <p>${returnAlert}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">X</button>
       </div>
     </div>
   </div>`
