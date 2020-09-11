@@ -18,6 +18,17 @@ lastGameStatsTitle.id = 'lastGameStats-title'
 const lastGameStatsList = document.createElement('ul')
 lastGameStatsList.classList = "list-group list-group-flush"
 
+const newPlayerData = document.createElement('div')
+newPlayerData.classList = "card"
+newPlayerData.id = "new-player-data"
+
+const newPlayerDataTitle = document.createElement('div')
+newPlayerDataTitle.classList = "card-body"
+newPlayerDataTitle.id = 'newPlayerData-title'
+
+const newPlayerDataList = document.createElement('ul')
+newPlayerDataList.classList = "list-group list-group-flush"
+
 const form = document.createElement('form')
 form.id = "player-form"
 
