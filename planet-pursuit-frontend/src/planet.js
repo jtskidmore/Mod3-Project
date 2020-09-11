@@ -297,11 +297,12 @@ function renderPlayerPlanet(playerplanet) {
 
         let attackBtn = document.createElement('button')
         attackBtn.id = 'attack-btn'
+        attackBtn.classList = "btn btn-primary" //possible conflict//
         attackBtn.setAttribute('data-toggle', 'modal')
         attackBtn.setAttribute('data-target', '#player-attack-modal')
         attackBtn.textContent = 'Attack'
 
-        game.append(attackBtn)
+        buttonsContainer.append(attackBtn)
 
         createFightListeners()
     }
