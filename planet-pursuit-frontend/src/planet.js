@@ -73,6 +73,8 @@ function renderPlayerPlanet(playerplanet) {
     exit.innerHTML = ''
 
     let exitBtn = document.createElement('button')
+    exitBtn.id = "exit-btn"
+    exitBtn.classList = "btn btn-primary"
     exitBtn.textContent = "Quit Game"
     exitBtn.setAttribute('data-toggle', 'modal')
     exitBtn.setAttribute('data-target', '#quit-modal')
@@ -91,10 +93,13 @@ function renderPlayerPlanet(playerplanet) {
     let planet = _planets.filter((planet) => planet.id === playerplanet.planet_id)[0]
     planetPlanet.textContent = `Welcome to ${planet.name}, ${player.name}!`
 
+
+
     let body = document.getElementsByTagName("BODY")[0]
     body.style.backgroundImage = `url(images/planets/${planet.name}.jpg)`
 
-    let planetNpc = document.createElement("h5")
+    let planetNpc = document.createElement("h4")
+    planetNpc.id = "planet-npc"
     _currentNpc = _npcs.filter((npc) => npc.id === playerplanet.npc_id)[0]
     gameHeader.append(planetPlanet, planetNpc)
 
@@ -111,6 +116,17 @@ function renderPlayerPlanet(playerplanet) {
         planetNpc.textContent = `${npc.name} is here to greet you! Would you like to trade for a weapon or potion?`
         let playerStats = document.createElement('div')
         playerStats.id = 'player-stats'
+
+
+
+        if (planet.name === "Kashyyyk" ||
+            planet.name === "Mustafar" ||
+            planet.name === "Coruscant" ||
+            planet.name === "Dagobah"
+        ) {
+            planetNpc.style.color =  'white'
+            planetPlanet.style.color = "white"
+        }
 
         let statList = document.createElement('ul')
         statList.innerHTML = `<h3>${player.name}</h3>`
@@ -147,32 +163,38 @@ function renderPlayerPlanet(playerplanet) {
         let npcWeaponEquipped = _weapons.filter((weapon) => weapon.id === npc.weapon_id)[0]
         npcWeapon.textContent = `Weapon: ${npcWeaponEquipped.name}`
 
-        npcStatList.append(npcPotion, npcWeapon)
+        npcStatList.append(npcWeapon, npcPotion)
         npcStats.append(npcStatList)
 
-        game.append(planetPlanet, planetNpc, playerStats, npcStats)
+        game.append(planetPlanet, planetNpc)
 
         let tradeWeaponBtnYes = document.createElement('button')
         tradeWeaponBtnYes.id = 'trade-weapon-yes'
+        tradeWeaponBtnYes.classList = "btn btn-primary"
         tradeWeaponBtnYes.setAttribute('data-toggle', 'modal')
         tradeWeaponBtnYes.setAttribute('data-target', '#trade-weapon-modal')
         tradeWeaponBtnYes.textContent = 'Trade Weapon'
 
         let tradePotionBtnYes = document.createElement('button')
         tradePotionBtnYes.id = 'trade-potion-yes'
+        tradePotionBtnYes.classList = "btn btn-primary"
         tradePotionBtnYes.setAttribute('data-toggle', 'modal')
         tradePotionBtnYes.setAttribute('data-target', '#trade-potion-modal')
         tradePotionBtnYes.textContent = 'Trade/Accept Potion'
 
         let tradeBtnNo = document.createElement('button')
         tradeBtnNo.id = 'trade-no'
+        tradeBtnNo.classList = "btn btn-primary"
         tradeBtnNo.textContent = 'No'
         tradeBtnNo.setAttribute('data-toggle', 'modal')
         tradeBtnNo.setAttribute('data-target', '#deny-trade-modal')
 
         gameStatsContainer.append(playerStats, npcStats)
 
-        
+        //////
+        let buttonsContainer = document.createElement("div")
+        buttonsContainer.id = "buttons-container"
+        /////
 
         let avatarContainer = document.createElement('div')
         avatarContainer.id = "avatar-container"
@@ -205,13 +227,23 @@ function renderPlayerPlanet(playerplanet) {
 
         game.append(avatarContainer)
 
+        buttonsContainer.append(tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
 
-
-        game.append(gameStatsContainer, tradeWeaponBtnYes, tradePotionBtnYes, tradeBtnNo)
+        game.append(gameStatsContainer, buttonsContainer)
 
 
         createTradeListeners()
     } else {
+
+        if (planet.name === "Kashyyyk" ||
+            planet.name === "Mustafar" ||
+            planet.name === "Coruscant" ||
+            planet.name === "Dagobah"
+        ) {
+            planetNpc.style.color =  'white'
+            planetPlanet.style.color = "white"
+        }
+
         planetNpc.textContent = `${npc.name} is here to fight you!`
 
         //player stats list
@@ -489,7 +521,6 @@ function attack() {
 }
 
 function enemyAttack() {
-    npcPrepAlert = `${_currentNpc.name} is preparing their attack...`
     console.log('enemy attack connected')
     _npcAttack = _currentNpc.attack
     let damagePoints = [-10, -5, 0, 0, 0, 0, 5, 10]
@@ -504,7 +535,7 @@ function enemyAttack() {
     npcPrepModal()
     $("#npc-prep-modal").modal('show');
 
-    npcAttackSequence(npcDamagePointDifference)
+    npcAttackSequence(_currentNpc, npcDamagePointDifference)
     
     if (_currentHealth <= 0) {
         _players.push(_current_player)
@@ -572,7 +603,7 @@ function playerAttackSequence(playerDamagePointDifference) {
     }
 }
 
-function npcAttackSequence(npcDamagePointDifference) {
+function npcAttackSequence(_currentNpc, npcDamagePointDifference) {
     if (npcDamagePointDifference > 0) {
         npcAttackAlert = `${_currentNpc.name}'s ${_npcWeapon.name} was very effective and did ${_npcAttack} points worth of damage to you!`
         npcAttackModal()

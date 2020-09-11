@@ -5,8 +5,8 @@ let consumePotionAlert = document.createElement('p')
 let playerAttackAlert //= document.createElement('p')
 let playerAttackAlert2 = document.createElement('p')
 let playerAttackAlert3 = document.createElement('p')
-let npcPrepAlert = document.createElement('p')
-let npcAttackAlert = document.createElement('p')
+let npcPrepAlert 
+let npcAttackAlert 
 let travelAlert = 'Traveling to new planet...'
 let fleeAlert = document.createElement('p')
 let npcDefeatedAlert
@@ -162,34 +162,43 @@ function playerAttackModal() {
 }
 
 function npcPrepModal() {
-    let closeBtn = document.createElement('button')
-    closeBtn.className = 'btn btn-primary'
-    closeBtn.setAttribute('data-dismiss', 'modal')
-    closeBtn.textContent = 'X'
-    // closeBtn.addEventListener('click', () => npcAttackSequence(npcDamagePointDifference))
+    // let closeBtn = document.createElement('button')
+    // closeBtn.className = 'btn btn-primary'
+    // closeBtn.setAttribute('data-dismiss', 'modal')
+    // closeBtn.textContent = 'X'
+    // // closeBtn.addEventListener('click', () => npcAttackSequence(npcDamagePointDifference))
 
-    let modalFooter = document.createElement('div')
-    modalFooter.id = 'npcprepfooter'
-    modalFooter.className = 'modal-footer'
-    modalFooter.append(closeBtn)
+    // let modalFooter = document.createElement('div')
+    // modalFooter.id = 'npcprepfooter'
+    // modalFooter.className = 'modal-footer'
+    // modalFooter.append(closeBtn)
 
-    let modalBody = document.createElement('div')
-    modalBody.className = 'modal-body'
-    modalBody.append(npcPrepAlert)
+    // let modalBody = document.createElement('div')
+    // modalBody.className = 'modal-body'
+    // modalBody.append(npcPrepAlert)
 
-    let modalContent = document.createElement('div')
-    modalContent.className = 'modal-content'
-    modalContent.append(modalBody, modalFooter)
+    // let modalContent = document.createElement('div')
+    // modalContent.className = 'modal-content'
+    // modalContent.append(modalBody, modalFooter)
 
-    let modalDialog = document.createElement('div')
-    modalDialog.className = 'modal-dialog'
-    modalDialog.append(modalContent)
+    // let modalDialog = document.createElement('div')
+    // modalDialog.className = 'modal-dialog'
+    // modalDialog.append(modalContent)
 
     let modal = document.createElement('div')
     modal.className = 'modal custom fade'
     modal.id = 'npc-prep-modal'
     modal.setAttribute('tabindex', '-1')
-    modal.append(modalDialog)
+    modal.innerHTML = `<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>${npcPrepAlert}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">X</button>
+      </div>
+    </div>
+  </div>`
 
     let alertWin = document.getElementById('alert-window')
     alertWin.append(modal)

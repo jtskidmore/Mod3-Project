@@ -241,7 +241,7 @@ Promise.all([promise]).then(data => {
     console.log(data[0])
     _players.push(data[0])
     _current_player = data[0]
-    home.append(visitBtn)
+    home.append(visitBtnDiv)
     visitBtn.addEventListener("click", () => renderPlanet(_current_player))
 })
 //////////////////////////////////////////////////
