@@ -32,9 +32,13 @@ newPlayerDataList.classList = "list-group list-group-flush"
 const form = document.createElement('form')
 form.id = "player-form"
 
+const visitBtnDiv = document.createElement('div')
+visitBtnDiv.id = "visit-btn-div"
 const visitBtn = document.createElement('button')
+visitBtn.classList = "btn btn-primary"
 visitBtn.textContent = "Visit Planet"
 visitBtn.id = "visit-btn"
+visitBtnDiv.append(visitBtn)
 
 const leaderboard = document.getElementById("leaderboard")
 const leaderboardTitle = document.createElement("div")
