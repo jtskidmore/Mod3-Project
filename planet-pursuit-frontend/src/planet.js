@@ -1,5 +1,4 @@
 let timeoutID;
-const y = ''
 let playerDamagePointDifference
 let npcDamagePointDifference;
 
@@ -56,7 +55,7 @@ function exitGame() {
         })
         .then(res => console.log(res));
         quitModal()
-        $("#flee-modal").modal('show');
+        $("#quit-modal").modal('show');
         timeoutID = setTimeout(function () { reload() }, 2000)
 }
 
@@ -297,7 +296,7 @@ function acceptTradeWeapon() {
 }
 
 function denyTrade() {
-    denyTradeAlert.textContent = `You have chosen not to trade`
+    // denyTradeAlert.textContent = `You have chosen not to trade`
     denyTradeModal()
     timeoutID = setTimeout(function () { renderPlanet(_current_player) }, 2000)
 }
