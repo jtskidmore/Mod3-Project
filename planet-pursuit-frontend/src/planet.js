@@ -304,6 +304,41 @@ function renderPlayerPlanet(playerplanet) {
 
         buttonsContainer.append(attackBtn)
 
+        /////avatar stuff////
+        let avatarContainer = document.createElement('div')
+        avatarContainer.id = "avatar-container"
+
+        let playerAvatar = document.createElement('div')
+        playerAvatar.id = "player-avatar"
+
+        let playerAvatarType = _types.filter((type) => type.id === _current_player.type_id)[0]
+    
+
+        let npcAvatar = document.createElement('div')
+        npcAvatar.id = "npc-avatar"
+
+        let npcFirstName 
+
+        if (_currentNpc.name.includes(" ")) {
+            npcFirstName = _currentNpc.name.split(' ')
+            let npcImageName = npcFirstName.join('')
+            npcFirstName = npcImageName
+            console.log(npcImageName)
+        } else {
+            npcFirstName = _currentNpc.name
+            console.log(npcFirstName)
+        }
+
+        npcAvatar.innerHTML = `<img src='images/villians/${npcFirstName}.png'>`
+
+        playerAvatar.innerHTML = `<img src='images/types/${playerAvatarType.name}.png'>`
+
+
+        avatarContainer.append(playerAvatar, npcAvatar)
+
+        game.append(planetPlanet, planetNpc, avatarContainer, gameStatsContainer, buttonsContainer)
+
+
         createFightListeners()
     }
 }
