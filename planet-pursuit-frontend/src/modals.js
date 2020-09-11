@@ -238,7 +238,7 @@ function travelModal() {
         <p>${travelAlert}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="travelmodalbtn" data-dismiss="modal">X</button>
+        <button type="button" class="btn btn-primary" id="travelmodalbtn" data-dismiss="modal"></button>
       </div>
     </div>
   </div>`
@@ -251,7 +251,7 @@ function fleeModal() {
     let closeBtn = document.createElement('button')
     closeBtn.className = 'btn btn-primary'
     closeBtn.setAttribute('data-dismiss', 'modal')
-    closeBtn.textContent = 'X'
+    closeBtn.textContent = ''
 
     let modalFooter = document.createElement('div')
     modalFooter.id = 'fleemodalfoot'
@@ -338,7 +338,7 @@ function quitModal() {
     let closeBtn = document.createElement('button')
     closeBtn.className = 'btn btn-primary'
     closeBtn.setAttribute('data-dismiss', 'modal')
-    closeBtn.textContent = 'X'
+    closeBtn.textContent = ''
 
     let modalFooter = document.createElement('div')
     modalFooter.id = 'quitmodalfoot'
