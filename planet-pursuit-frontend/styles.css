@@ -1,127 +1,292 @@
 
 #home {
-    margin: auto;
-    width: 90%;
-    align-items: center;
+  margin: auto;
+  width: 90%;
+  align-items: center;
 }
 
 body {
-    background-image: url('images/planets/home.jpg');
+  background-image: url('images/planets/home.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .logo {
-    margin: auto;
-    width: 90%;
-    justify-content: center;
-    margin-bottom: 20px;
-    padding-left: 18px;
+  margin: auto;
+  width: 90%;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-left: 18px;
+  padding-bottom: 10px;
 }
 
 .logo img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 25%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
 }
 
 #leaderboard {
-    background: url('img/red_transparent_background.png');
-    background: rgba(255, 255, 255, 0.253);
-    margin: auto;
-    width: 90%;
-    border: 5px solid rgb(21, 21, 121);
-    align-items: center;
+  background: url('img/red_transparent_background.png');
+  background: rgba(202, 202, 202, 0.418);
+  margin: auto;
+  width: 90%;
+  border: 5px solid rgb(21, 21, 121);
+  align-items: center;
 }
 
 #leaderboard-title {
-    margin-top: 5px;
-    padding: 7px;
+  margin-top: 5px;
+  padding: 7px;
 }
 
 #leaderboard-title h3 {
-    font-weight: bold;
-    font-size: 26px;
-    padding-top: 10px;
-    font-family: 'Kufam';
-    color: rgb(224, 224, 224);
+  font-weight: bold;
+  font-size: 26px;
+  padding-top: 10px;
+  font-family: 'Kufam';
+  color: rgb(224, 224, 224);
 }
 
 #leaderboard ol {
-    font-family: 'Exo 2', sans-serif;
-    color: rgb(224, 224, 224);
-    padding-top: 20px;
-    padding-bottom: 20px;
+  font-family: 'Exo 2', sans-serif;
+  color: rgb(224, 224, 224);
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#new-player-data {
+  background: url('img/red_transparent_background.png');
+  background: rgba(202, 202, 202, 0.418);
+  margin: auto;
+  width: 25%;
+  border: 5px solid rgb(21, 21, 121);
+  align-items: center;
+}
+
+#newPlayerData-title {
+  margin-top: 5px;
+  padding: 7px;
+}
+
+#newPlayerData-title h3 {
+  font-weight: bold;
+  font-size: 26px;
+  padding-top: 10px;
+  font-family: 'Kufam';
+  color: rgb(224, 224, 224);
+}
+
+#new-player-data ul {
+  list-style-type: none;
+  font-family: 'Exo 2', sans-serif;
+  color: rgb(224, 224, 224);
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 #previous-game-stats {
-    background: url('img/red_transparent_background.png');
-    background: rgba(255, 255, 255, 0.253);
-    margin: auto;
-    width: 90%;
-    border: 5px solid rgb(21, 21, 121);
-    align-items: center;
+  background: url('img/red_transparent_background.png');
+  background: rgba(202, 202, 202, 0.418);
+  margin: auto;
+  width: 90%;
+  border: 5px solid rgb(21, 21, 121);
+  align-items: center;
 }
 
 #lastGameStats-title {
-    margin-top: 5px;
-    padding: 7px;
+  margin-top: 5px;
+  padding: 7px;
 }
 
 #lastGameStats-title h3{
-    text-align: center;
-    font-weight: bold;
-    font-size: 26px;
-    padding-top: 10px;
-    font-family: 'Kufam';
-    color: rgb(224, 224, 224);
+  text-align: center;
+  font-weight: bold;
+  font-size: 26px;
+  padding-top: 10px;
+  font-family: 'Kufam';
+  color: rgb(224, 224, 224);
 }
 
 #previous-game-stats ul {
-    font-family: 'Exo 2', sans-serif;
-    color: rgb(224, 224, 224);
-    list-style-type: none;
-    padding-right: 40px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+  font-family: 'Exo 2', sans-serif;
+  color: rgb(224, 224, 224);
+  list-style-type: none;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 #form-div {
-    margin: auto;
-    width: 30%;
-    text-align: center;
+  margin: auto;
+  width: 30%;
+  text-align: center;
 }
 
 .container {
-    display: flex;
-    width: 65%;
+  display: flex;
+  width: 65%;
 }
 
 #form-name, #form-type, #form-button {
-    margin: 5px
+  margin: 5px
 }
 
 #form-name, #form-type {
-    opacity: 70%;
+  opacity: 70%;
 }
 
-#form-button {
-    background-color: rgb(21, 21, 121);
-    border: none;
+#form-button, #visit-btn {
+  background-color: rgb(21, 21, 121);
+  border: none;
 }
 
-#form-button:hover {
-    background-color: rgb(70, 70, 172);
+#form-button:hover, #visit-btn:hover {
+  background-color: rgb(70, 70, 172);
+  border: none;
+}
+
+#visit-btn {
+  margin-top: 20px;
+}
+
+#visit-btn-div {
+  margin: auto;
+  width: auto;
+  text-align: center;
 }
 
 
 #player-form {
-    margin:auto;
-    align-items: center;
-    width: 90%;
+  margin:auto;
+  align-items: center;
+  width: 90%;
+  padding-bottom: 20px;
+}
+
+#game {
+  margin: auto;
+  width: 90%;
+  align-items: center;
+}
+
+#game-header {
+  margin: auto;
+  width: 65%;
+  align-items: center;
+}
+
+#planet-npc {
+  font-family: 'Exo 2', sans-serif;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+#planet-planet {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 30px;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+#player-stats {
+  display: inline-block;
+  background: url('img/red_transparent_background.png');
+  background: rgba(110, 110, 110, 0.589);
+  margin-right: 50px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  width: 22rem;
+  border: 5px solid rgb(21, 21, 121);
+  align-items: center;
+}
+
+#npc-stats {
+  display: inline-block;
+  background: url('img/red_transparent_background.png');
+  background: rgba(110, 110, 110, 0.589);
+  margin-left: 50px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  width: 22rem;
+  border: 5px solid rgb(21, 21, 121);
+  align-items: center;
+}
+
+#player-stats ul {
+  font-family: 'Exo 2', sans-serif;
+  color: rgb(224, 224, 224);
+  list-style-type: none;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#npc-stats ul {
+  font-family: 'Exo 2', sans-serif;
+  color: rgb(224, 224, 224);
+  list-style-type: none;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#game-stats-container {
+  text-align: center;
+  width: 100%;
+}
+
+#buttons-container button {
+  margin: 10px;
+}
+
+#buttons-container button:hover {
+  background-color: rgb(21, 21, 121);
+  border: none;
+}
+
+#buttons-container {
+  text-align: center;
+  width: 100%;
+}
+
+#avatar-container {
+  height: 350px;
+  text-align: center;
+  width: 100%;
+}
+
+#player-avatar {
+  display: inline-block;
+  height: 100%;
+  width: 200px;
+  margin-right: 125px;
+  margin-top: 30px;
+}
+
+#player-avatar img {
+  max-height: 350px;
+}
+
+#npc-avatar {
+  display: inline-block;
+  height: 100%;
+  width: 200px;
+  margin-left: 125px;
+  margin-top: 30px;
+}
+
+#npc-avatar img {
+  max-height: 350px;
 }
 
 .modal .modal-content {
-  background: rgb(70, 70, 172);
+  background: rgb(21, 21, 121);
   opacity: 70%;
 }
 
@@ -132,6 +297,6 @@ body {
 }
 
 .modal .btn.btn-primary {
-  background: rgb(70, 70, 172);
-  border-color: rgb(70, 70, 172);
+  background: rgb(21, 21, 121);
+  border-color: rgb(21, 21, 121);
 }
